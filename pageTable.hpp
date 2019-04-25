@@ -13,6 +13,8 @@ class pageTable{
     int getPageNumber(); //returns page number
     bool checkStatus(char status); //checks the status for paging in process
     void outputPageTable();
+    istream &operator >>(istream &in_stream, pageTable &page);
+    ostream &operator <<(ostream &out_stream, pageTable &page);
 
     private:
     int processID;
