@@ -9,6 +9,12 @@
 
 using namespace std;
 
+istream &operator>>(istream &in_stream, &pageTable page){
+    in_stream >> pageTable.processID;
+    in_stream >> pageTable.processAction;
+    in_stream >> pageTable.pageNumber; 
+}
+
 bool pageTable::checkStatus(char status){
     if(status == 'C' || status == 'T'){
         pageStatus = false;
