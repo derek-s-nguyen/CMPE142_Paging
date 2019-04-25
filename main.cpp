@@ -9,7 +9,10 @@ using namespace std;
 
 int main(){
     int next;
+    char status;
     ifstream in_stream;
     in_stream.open("memory.dat");
     in_stream >> next;
+    in_stream >> status;
+    in_stream>> next;
 }
