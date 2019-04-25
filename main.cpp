@@ -8,5 +8,8 @@
 using namespace std;
 
 int main(){
-
+    int next;
+    ifstream in_stream;
+    in_stream.open("memory.dat");
+    in_stream >> next;
 }
