@@ -18,6 +18,7 @@ class pageTable{
 
     private:
     int processID;
+    char processAction;
     int pageNumber; //what page are we on
     bool pageStatus; //checks if the page exists
 }
