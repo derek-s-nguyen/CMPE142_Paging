@@ -9,6 +9,8 @@
 
 using namespace std;
 
+pageTable::pageTable(){}
+
 istream &operator>>(istream &in_stream, &pageTable page){
     in_stream >> pageTable.processID;
     in_stream >> pageTable.processAction;
