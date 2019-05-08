@@ -4,8 +4,12 @@
 #include <cstring>
 #include <string>
 #include <fstream>
+#include "pageTable.hpp"
+
 
 using namespace std;
+
+pageTable table[20];
 
 int main(){
     //taking in data from file 
