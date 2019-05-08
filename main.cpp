@@ -8,6 +8,8 @@
 using namespace std;
 
 int main(){
+    //taking in data from file 
+    
     int next;
     char status;
     ifstream in_stream;
