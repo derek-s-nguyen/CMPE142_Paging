@@ -17,6 +17,20 @@ istream &operator>>(istream &in_stream, &pageTable page){
     in_stream >> pageTable.pageNumber; 
 }
 
+int pageTable::get_processID(){
+    return processID;
+}
+bool pageTable::isDirty(){
+    return dirty;
+}
+bool pageTable::makeDirty(){
+    dirty = true;
+    return dirty;
+}
+bool pageTable::setFree(){
+    isAllocated = false;
+    return isAllocated;
+}
 bool pageTable::checkStatus(char status){
     if(status == 'C' || status == 'T'){
         pageStatus = false;
