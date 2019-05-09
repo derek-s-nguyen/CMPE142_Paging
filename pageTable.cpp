@@ -9,7 +9,13 @@
 
 using namespace std;
 
-pageTable::pageTable(){}
+pageTable::pageTable(){
+    processID = 0;
+    dirty = false;
+    processAction = NULL;
+    pageNumber = 0;
+
+}
 
 istream &operator>>(istream &in_stream, &pageTable page){
     in_stream >> pageTable.processID;
