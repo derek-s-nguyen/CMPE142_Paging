@@ -13,7 +13,8 @@ public:
     int getPageNumber(); //returns page number
     int get_processID();
     bool checkStatus(char status); //checks the status for paging in process
-    bool isDirty(); 
+    bool isDirty();
+    bool makeDirty(); 
     bool setFree();
     void outputPageTable();
     friend istream &operator >>(istream &in_stream, pageTable &page);

@@ -17,10 +17,10 @@ pageTable::pageTable(){
 
 }
 
-istream &operator>>(istream &in_stream, &pageTable page){
-    in_stream >> pageTable.processID;
-    in_stream >> pageTable.processAction;
-    in_stream >> pageTable.pageNumber; 
+istream &operator>>(istream &in_stream, pageTable &page){
+    in_stream >> page.processID;
+    in_stream >> page.processAction;
+    in_stream >> page.pageNumber; 
 }
 
 int pageTable::get_processID(){

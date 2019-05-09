@@ -14,11 +14,25 @@ pageTable table[20];
 int main(){
     //taking in data from file 
     
-    int next;
-    char status;
-    ifstream in_stream;
-    in_stream.open("memory.dat");
-    in_stream >> next;
-    in_stream >> status;
-    in_stream>> next;
+	int PID;//Process ID
+	int VA; //Virtual Address
+	char status; //Process Action
+	
+	
+	VA = 12;
+    	ifstream in_stream;
+    	in_stream.open("memory.dat");
+	while(!in_stream.eof()){
+    		in_stream >> PID;
+		cout << PID;
+    		in_stream >> status;
+		cout << status;
+		if(status == 'A' || status == 'W' || status == 'F' || status == 'R'){
+    			in_stream >> VA;
+			cout << VA;
+		}
+    		cout << "\n";
+	}
+
+	
 }
