@@ -17,9 +17,8 @@ int main(){
 	int PID;//Process ID
 	int VA; //Virtual Address
 	char status; //Process Action
+	int processActionCounter = 0;//# of instructions
 	
-	
-	VA = 12;
     	ifstream in_stream;
     	in_stream.open("memory.dat");
 	while(!in_stream.eof()){
@@ -31,7 +30,11 @@ int main(){
     			in_stream >> VA;
 			cout << VA;
 		}
-    		cout << "\n";
+ 		cout << "\t";
+		processActionCounter++;
+		cout << processActionCounter;
+		cout << "\n";
+		
 	}
 
 	

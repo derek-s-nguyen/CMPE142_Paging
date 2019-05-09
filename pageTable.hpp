@@ -20,11 +20,20 @@ public:
     friend istream &operator >>(istream &in_stream, pageTable &page);
     friend ostream &operator <<(ostream &out_stream, pageTable &page);
 
-private:
     int processID; //ID of the page
     int pageNumber; //what page are we on
     bool dirty;
+    int accessed;
     bool isAllocated; //bool to check if the page is allocated or not
     char processAction; //create, allocate, write, read
     bool pageStatus; //checks if the page exists
+};
+
+class Process{
+public:
+    Process();
+    int PID;
+    bool isCreated;
+    bool isTerminated;
+    pageTable* pages;
 };

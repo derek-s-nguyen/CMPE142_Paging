@@ -8,7 +8,13 @@
 #include "pageTable.hpp"
 
 using namespace std;
+Process::Process(){
+PID = 0;
+isCreated = false;
+isTerminated = false;
+pages = NULL;
 
+}
 pageTable::pageTable(){
     processID = 0;
     dirty = false;
@@ -47,3 +53,4 @@ bool pageTable::checkStatus(char status){
     }
     return pageStatus;
 }
+
