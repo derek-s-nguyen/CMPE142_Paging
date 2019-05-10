@@ -30,12 +30,14 @@ istream &operator>>(istream &in_stream, pageTable &page){
     in_stream >> page.processID;
     in_stream >> page.processAction;
     in_stream >> page.virtualAddress; 
+    return in_stream;
 }
 
 ostream &operator<<(ostream &out_stream, pageTable &page){
     out_stream << page.processID<<"\t";
     out_stream << page.processAction<<"\t";
     out_stream << page.virtualAddress<<"\n"; 
+    return out_stream;
 }
 
 
