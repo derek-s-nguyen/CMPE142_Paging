@@ -8,17 +8,19 @@
 #include "pageTable.hpp"
 
 using namespace std;
+
 Process::Process(){
-PID = 0;
-isCreated = false;
-isTerminated = false;
-pages = NULL;
+    PID = 0;
+    isCreated = false;
+    isTerminated = false;
+    pages = NULL;
 
 }
 pageTable::pageTable(){
     processID = 0;
     dirty = false;
-    processAction = NULL;
+    isAllocated = false;
+    accessed = 0;
     physicalAddress = 0;
     virtualAddress = 0;
 
@@ -30,6 +32,21 @@ istream &operator>>(istream &in_stream, pageTable &page){
     in_stream >> page.virtualAddress; 
 }
 
+ostream &operator<<(ostream &out_stream, pageTable &page){
+    out_stream << page.processID<<"\t";
+    out_stream << page.processAction<<"\t";
+    out_stream << page.virtualAddress<<"\n"; 
+}
+
+
+void pageTable::operator=(pageTable &page){
+	processID = page.processID;
+	dirty = page.dirty;
+	isAllocated = page.isAllocated;
+	accessed = page.accessed;
+	physicalAddress = page.physicalAddress;
+	virtualAddress = page.virtualAddress;
+}
 int pageTable::get_processID(){
     return processID;
 }

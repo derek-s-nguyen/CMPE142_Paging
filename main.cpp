@@ -47,24 +47,32 @@ int main(){
 			
 			Processes[newProcessIndex].PID = PID;
 			Processes[newProcessIndex].isCreated = true;
-			newProcessIndex++; 
+			newProcessIndex++;
+			//Processes[newProcessIndex].pages = NULL;
+			cout<<Processes[AllocateIndex].pages<<endl;
+		
 		}
+		
 		if(status == 'A'){//allocate page for PID
 			//find process with PID
 			PA = 0;
-
+			cout<<Processes[AllocateIndex].pages<<endl;
 			while(physicalPages[PA].isAllocated) PA++; //find free page
-
+			cout<<"PA found"<<endl;
 			for(int i = 0; i < 50; i++){
 				if(Processes[i].PID == PID){
-					if(!Processes[AllocateIndex].pages){ 
+					cout<< "Process found"<<endl;
+					if(Processes[AllocateIndex].pages == NULL){ 
 						Processes[i].pages = new pageTable[20];
+						cout<<"page Table pointed successfully"<<endl;
 						Processes[i].pages[VA].virtualAddress = VA;
 						Processes[i].pages[VA].physicalAddress = PA;
 						Processes[i].pages[VA].isAllocated = true;
 				
 					}
 					else{	
+						
+						cout<<"process has already page table so adding PTE"<<endl;
 						Processes[i].pages[VA].virtualAddress = VA;
 						Processes[i].pages[VA].physicalAddress = PA;
 						Processes[i].pages[VA].isAllocated = true;		
@@ -78,7 +86,7 @@ int main(){
 			}
 
 			
-
+		
 			//1(a).If Process has no pages
 			
 			//use pageTable ptr in process object to make dynamic pagetable array
@@ -120,12 +128,25 @@ int main(){
 			}
 			//find page in process page table 
 			//set accessTimeStamp 
+		
 		}
 		if(status == 'F'){//free page 
 			//locate process with PID in process array
+			for(int i = 0; i < 50; i++){
+				if(Processes[i].PID == PID){
+					Processes[i].pages[VA].isAllocated = false;
+					physicalPages[Processes[i].pages[VA].physicalAddress].isAllocated = false;
+					physicalPages[Processes[i].pages[VA].physicalAddress].virtualAddress = 0;
+					physicalPages[Processes[i].pages[VA].physicalAddress].dirty = false;
+					physicalPages[Processes[i].pages[VA].physicalAddress].accessed = 0;
+
+					break;
+				}
+			}
 			//find page in process page table
 			//free page in process page table 
 			//free page in physical pages (using PA found page)
+			cout<<physicalPages[PA];
 		}
 		if(status == 'T'){//Terminate process
 			//locate process with PID in process array
@@ -136,6 +157,7 @@ int main(){
 		
 		
 	}
-
+	
+	
 	
 }
