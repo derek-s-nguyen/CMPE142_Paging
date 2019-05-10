@@ -21,7 +21,8 @@ public:
     friend ostream &operator <<(ostream &out_stream, pageTable &page);
 
     int processID; //ID of the page
-    int pageNumber; //what page are we on
+    int physicalAddress; //what page are we on
+    int virtualAddress;
     bool dirty;
     int accessed;
     bool isAllocated; //bool to check if the page is allocated or not

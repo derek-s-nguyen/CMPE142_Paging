@@ -9,7 +9,7 @@
 
 using namespace std;
 
-pageTable table[20];
+pageTable physicalPages[20];
 pageTable swap[20];
 int main(){
     //taking in data from file 
@@ -21,6 +21,9 @@ int main(){
 	int newProcessIndex = 0;//index where new process will be created 
 	int accessTimeStamp = 0;//determine when page was accessed
 	Process Processes[50];//array of processes
+	int AllocateIndex = 0;
+	int PA;
+	
 
 	
     	ifstream in_stream;
@@ -41,28 +44,80 @@ int main(){
 		cout << "\n";
 		
 		if(status == 'C'){//create the process in processes array 
+			
 			Processes[newProcessIndex].PID = PID;
-			Processes[newProcessIndex].isCreated = true; 
+			Processes[newProcessIndex].isCreated = true;
+			newProcessIndex++; 
 		}
 		if(status == 'A'){//allocate page for PID
 			//find process with PID
+			PA = 0;
+
+			while(physicalPages[PA].isAllocated) PA++; //find free page
+
+			for(int i = 0; i < 50; i++){
+				if(Processes[i].PID == PID){
+					if(!Processes[AllocateIndex].pages){ 
+						Processes[i].pages = new pageTable[20];
+						Processes[i].pages[VA].virtualAddress = VA;
+						Processes[i].pages[VA].physicalAddress = PA;
+						Processes[i].pages[VA].isAllocated = true;
+				
+					}
+					else{	
+						Processes[i].pages[VA].virtualAddress = VA;
+						Processes[i].pages[VA].physicalAddress = PA;
+						Processes[i].pages[VA].isAllocated = true;		
+					}
+	
+					physicalPages[PA].processID = PID;
+					physicalPages[PA].virtualAddress = VA;
+					physicalPages[PA].physicalAddress = PA;
+					break;
+				}
+			}
+
+			
+
 			//1(a).If Process has no pages
+			
 			//use pageTable ptr in process object to make dynamic pagetable array
 			//assign VA and PA
 			//
 			//1(b).If Process already has pages 
+			
+			
 			//find free space in page table and assign VA and PA
 			//
 			//2. place page in physical PageTable (PA and VA)
-			//3. change index to next free page in the physical pages 	
+
+			
+			//3. change index to next free page in the physical pages 
+	
 		}
 		if(status == 'W'){//write into page for PID
-			//locate process with PID in the processes array 
+			//locate process with PID in the processes array
+			for(int i = 0; i < 50; i++){
+				if(Processes[i].PID == PID){
+					Processes[i].pages[VA].dirty = true;
+					physicalPages[Processes[i].pages[VA].physicalAddress].dirty = true;	
+					break;
+				}
+			}
+
 			//find page in process page table 
 			//make dirty teehee ;)
 		}
 		if(status == 'R'){//Read from page
 			//locate process with PID in process array
+			for(int i = 0; i < 50; i++){
+				if(Processes[i].PID == PID){
+					Processes[i].pages[VA].accessed = accessTimeStamp;
+					physicalPages[Processes[i].pages[VA].physicalAddress].accessed = accessTimeStamp;
+					accessTimeStamp++;	
+					break;
+				}
+			}
 			//find page in process page table 
 			//set accessTimeStamp 
 		}

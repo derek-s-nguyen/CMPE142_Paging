@@ -19,14 +19,15 @@ pageTable::pageTable(){
     processID = 0;
     dirty = false;
     processAction = NULL;
-    pageNumber = 0;
+    physicalAddress = 0;
+    virtualAddress = 0;
 
 }
 
 istream &operator>>(istream &in_stream, pageTable &page){
     in_stream >> page.processID;
     in_stream >> page.processAction;
-    in_stream >> page.pageNumber; 
+    in_stream >> page.virtualAddress; 
 }
 
 int pageTable::get_processID(){
@@ -46,7 +47,7 @@ bool pageTable::setFree(){
 bool pageTable::checkStatus(char status){
     if(status == 'C' || status == 'T'){
         pageStatus = false;
-        pageNumber = 0;
+        virtualAddress = 0;
     }
     else if(status == 'A' || status == 'R' || status == 'W' || status == 'F'){
         pageStatus = true;
