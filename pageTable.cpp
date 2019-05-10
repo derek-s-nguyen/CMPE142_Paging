@@ -36,7 +36,7 @@ istream &operator>>(istream &in_stream, pageTable &page){
 ostream &operator<<(ostream &out_stream, pageTable &page){
     out_stream << page.processID<<"\t";
     out_stream << page.processAction<<"\t";
-    out_stream << page.virtualAddress<<"\n"; 
+    out_stream << page.virtualAddress<<"\t"; 
     return out_stream;
 }
 
