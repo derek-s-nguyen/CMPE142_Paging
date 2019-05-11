@@ -217,6 +217,7 @@ int main(){
 							break;
 						}
 					}
+				}
 			}
 		}
 		if(status == 'F'){//free page 
