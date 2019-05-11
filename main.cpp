@@ -10,7 +10,9 @@
 using namespace std;
 
 pageTable physicalPages[20];
-pageTable swap[20];
+pageTable swapSpace[40];
+Process Processes[50];//array of processes
+
 int main(){
     //taking in data from file 
     
@@ -20,9 +22,8 @@ int main(){
 	int processActionCounter = 0;//# of instructions
 	int newProcessIndex = 0;//index where new process will be created 
 	int accessTimeStamp = 1;//determine when page was accessed
-	Process Processes[50];//array of processes
 	int PA;
-	
+	int swapSpaceIndex = 0;
 
 	
     	ifstream in_stream;
@@ -55,15 +56,55 @@ int main(){
 		if(status == 'A'){//allocate page for PID
 			//find process with PID
 			PA = 0;
-		
-			while(physicalPages[PA].isAllocated) PA++; //find free page
+			swapSpaceIndex = 0;
+			bool needSwapAlgo = false;
+			bool swapHappens = false;
+			while(physicalPages[PA].isAllocated){ 
+				PA++;//find free page
+				if(PA > 19){//if no free page look for unmodified page
+					PA = 0;
+					swapHappens = true;//a swap will happen but not sure if it is clean page swap or swap algo
+					while(physicalPages[PA].dirty){//find unmodified page 
+						PA++;			
+						if(PA > 19){//if no clean page found
+							PA = 0;
+							needSwapAlgo = true;//need a swap algorithm
+							break;
+						}
+					} 	
+				}
 
+		
+				
+			}
+			
 			cout<<"PA found:"<<PA<<endl;
 			for(int i = 0; i < 50; i++){
 				if(Processes[i].PID == PID){
 					cout<<Processes[i].pages<<endl;
 					cout<< "PID:"<<PID<<endl;
 					cout<< "Process found"<<endl;
+
+					if(swapHappens && !needSwapAlgo){
+						//find an empty page in swap space
+						while(swapSpace[swapSpaceIndex].isAllocated){
+							swapSpaceIndex++;	
+						}
+						//copy page into swap space
+						swapSpace[swapSpaceIndex].processID = physicalPages[PA].processID;
+						swapSpace[swapSpaceIndex].virtualAddress = physicalPages[PA].virtualAddress;
+						swapSpace[swapSpaceIndex].isAllocated = true;
+						swapSpace[swapSpaceIndex].dirty = physicalPages[PA].dirty;
+						swapSpace[swapSpaceIndex].accessed = physicalPages[PA].accessed;
+
+						for(int processToSwap = 0; processToSwap < 50; processToSwap++){//set the PTE to 'S' 
+							if(Processes[processToSwap].PID == physicalPages[PA].processID){
+								Processes[processToSwap].pages[physicalPages[PA].virtualAddress].inSwapSpace = true;
+								break;
+							}
+						}
+						//indicate if in swap space in page table 
+					}
 					if(Processes[i].pages == NULL){ 
 						Processes[i].pages = new pageTable[20];
 						cout<<"page Table pointed successfully"<<endl;
@@ -74,7 +115,6 @@ int main(){
 				
 					}
 					else{	
-						
 						cout<<"process has already page table so adding PTE"<<endl;
 						Processes[i].pages[VA].virtualAddress = VA;
 						Processes[i].pages[VA].physicalAddress = PA;

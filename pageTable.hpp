@@ -30,6 +30,7 @@ public:
     bool isAllocated; //bool to check if the page is allocated or not
     char processAction; //create, allocate, write, read
     bool pageStatus; //checks if the page exists
+    bool inSwapSpace;
 };
 
 class Process{

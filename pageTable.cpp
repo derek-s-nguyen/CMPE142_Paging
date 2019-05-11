@@ -23,6 +23,8 @@ pageTable::pageTable(){
     accessed = 0;
     physicalAddress = 0;
     virtualAddress = 0;
+    isFreed = false;
+    inSwapSpace = false;
 
 }
 
