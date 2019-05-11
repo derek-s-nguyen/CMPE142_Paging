@@ -269,6 +269,11 @@ int main()
 
                     break;
                 }
+                else if (physicalPages[i].processID == PID
+                        && physicalPages[i].isAllocated == false)
+                {
+                    delete Processes[i].pages;
+                } //deletes the page table assigned to the process since it tries to free an allocated page
             }
 
             //find page in process page table
@@ -289,7 +294,7 @@ int main()
                     Processes[i].isTerminated = true; //deemed terminated
                     Processes[i].pages = NULL; //page table ptr points to NULL
                     break;
-                } //q: do we need to delete any pointers?
+                }
             }
 
             for (int i = 0; i < 20; i++)
@@ -304,11 +309,7 @@ int main()
                     physicalPages[i].processID = 0;
 
                 }
-                else if (physicalPages[i].processID == PID
-                        && physicalPages[i].isAllocated == false)
-                {
-                    delete Processes[i].pages;
-                } //this is probably syntactically incorrect but this could be when the process tries to access a deallocated page
+
             }
 
             //locate process with PID in process array
