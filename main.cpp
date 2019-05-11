@@ -13,6 +13,7 @@ pageTable physicalPages[20];
 pageTable swapSpace[40];
 Process Processes[50];//array of processes
 
+
 int main(){
     //taking in data from file 
     
@@ -61,14 +62,17 @@ int main(){
 			bool swapHappens = false;
 			while(physicalPages[PA].isAllocated){ 
 				PA++;//find free page
-				if(PA > 19){//if no free page look for unmodified page
+				if(PA > 19){
+					//if no free page look for unmodified page
 					PA = 0;
 					swapHappens = true;//a swap will happen but not sure if it is clean page swap or swap algo
-					while(physicalPages[PA].dirty){//find unmodified page 
+					while(physicalPages[PA].dirty){
+						//find unmodified page 
 						PA++;			
-						if(PA > 19){//if no clean page found
+						if(PA > 19){
+							//if no clean page found
 							PA = 0;
-							needSwapAlgo = true;//need a swap algorithm
+							needSwapAlgo = true; //need a swap algorithm
 							break;
 						}
 					} 	
@@ -146,19 +150,41 @@ int main(){
 	
 		}
 		if(status == 'W'){//write into page for PID
-			//locate process with PID in the processes array
+
+			//locate process with PID in the processes array and write into that page
 			for(int i = 0; i < 50; i++){
+
 				if(Processes[i].PID == PID){
-					Processes[i].pages[VA].dirty = true;
+					Processes[i].pages[VA].dirty = true; //make dirty teehee ;)
 					physicalPages[Processes[i].pages[VA].physicalAddress].dirty = true;
 					physicalPages[Processes[i].pages[VA].physicalAddress].accessed = accessTimeStamp;
 					accessTimeStamp++;		
 					break;
 				}
-			}
+
+			//swap pages if index is out of range
+			int index = 0;
+			swapSpaceIndex = 0;
+			bool needSwapAlgo = false;
+			bool swapHappens = false;
+			while(physicalPages[PA].isAllocated){ 
+				index++;//find free page
+				if(index > 19){
+					index = 0;
+					swapHappens = true;
+					while(physicalPages[PA].dirty){
+						//find unmodified page 
+						index++;			
+						if(index > 19){
+							//if no clean page found
+							index = 0;
+							needSwapAlgo = true; //need a swap algorithm
+							break;
+						}
+					} 	
+				}
 
 			//find page in process page table 
-			//make dirty teehee ;)
 		}
 		if(status == 'R'){//Read from page
 			//locate process with PID in process array
@@ -196,9 +222,10 @@ int main(){
 		}
 		if(status == 'T'){//Terminate process
 			for(int i = 0; i < 50; i++){
-				if(Processes[i].PID == PID){//finds Process
-					//Processes[i].isCreated = false;//Not allocated anymore
-					Processes[i].isTerminated = true;//deemed terminated
+				if(Processes[i].PID == PID){
+					//finds Process
+					Processes[i].isCreated = false; //Not allocated anymore
+					Processes[i].isTerminated = true; //deemed terminated
 					Processes[i].pages = NULL;//page table ptr points to NULL
 					break;
 				}
