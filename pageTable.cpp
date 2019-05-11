@@ -65,14 +65,3 @@ bool pageTable::setFree(){
     isAllocated = false;
     return isAllocated;
 }
-bool pageTable::checkStatus(char status){
-    if(status == 'C' || status == 'T'){
-        pageStatus = false;
-        virtualAddress = 0;
-    }
-    else if(status == 'A' || status == 'R' || status == 'W' || status == 'F'){
-        pageStatus = true;
-    }
-    return pageStatus;
-}
-
