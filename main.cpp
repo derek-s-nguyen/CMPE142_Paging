@@ -254,7 +254,7 @@ int main()
           //locate process with PID in process array
             for (int i = 0; i < 50; i++)
             {
-                if (Processes[i].PID == PID)
+                if (Processes[i].PID == PID && Processes[i].pages[VA].isAllocated == true)
                 {
                     Processes[i].pages[VA].isAllocated = false;
                     Processes[i].pages[VA].isFreed = true;
@@ -269,8 +269,8 @@ int main()
 
                     break;
                 }
-                else if (physicalPages[i].processID == PID
-                        && physicalPages[i].isAllocated == false)
+                else if (Processes[i].processID == PID
+                        && Processes[i].pages[VA].isAllocated == false)
                 {
                     delete Processes[i].pages;
                 } //deletes the page table assigned to the process since it tries to free an allocated page
