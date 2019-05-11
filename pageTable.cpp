@@ -18,6 +18,7 @@ Process::Process(){
 }
 pageTable::pageTable(){
     processID = 0;
+    processAction = NULL;
     dirty = false;
     isAllocated = false;
     accessed = 0;
@@ -31,25 +32,25 @@ pageTable::pageTable(){
 istream &operator>>(istream &in_stream, pageTable &page){
     in_stream >> page.processID;
     in_stream >> page.virtualAddress;
-    in_stream >> page.physicalAddress; 
+    in_stream >> page.physicalAddress;
     return in_stream;
 }
 
 ostream &operator<<(ostream &out_stream, pageTable &page){
     out_stream << page.processID<<"\t";
     out_stream << page.virtualAddress<<"\t";
-    out_stream << page.physicalAddress<<"\t"; 
+    out_stream << page.physicalAddress<<"\t";
     return out_stream;
 }
 
 
 void pageTable::operator=(pageTable &page){
-	processID = page.processID;
-	dirty = page.dirty;
-	isAllocated = page.isAllocated;
-	accessed = page.accessed;
-	physicalAddress = page.physicalAddress;
-	virtualAddress = page.virtualAddress;
+    processID = page.processID;
+    dirty = page.dirty;
+    isAllocated = page.isAllocated;
+    accessed = page.accessed;
+    physicalAddress = page.physicalAddress;
+    virtualAddress = page.virtualAddress;
 }
 int pageTable::get_processID(){
     return processID;
