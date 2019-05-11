@@ -167,7 +167,7 @@ int main(){
 			swapSpaceIndex = 0;
 			bool needSwapAlgo = false;
 			bool swapHappens = false;
-			while(physicalPages[PA].isAllocated){ 
+			while(physicalPages[index].isAllocated){ 
 				index++;//find free page
 				if(index > 19){
 					index = 0;
