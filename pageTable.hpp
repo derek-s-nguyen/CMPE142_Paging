@@ -10,7 +10,6 @@ using namespace std;
 class pageTable{
 public:
     pageTable();
-    int getPageNumber(); //returns page number
     int get_processID();
     bool isDirty();
     bool makeDirty();
