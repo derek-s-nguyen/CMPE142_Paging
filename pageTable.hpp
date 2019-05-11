@@ -13,9 +13,8 @@ public:
     int getPageNumber(); //returns page number
     int get_processID();
     bool isDirty();
-    bool makeDirty(); 
+    bool makeDirty();
     bool setFree();
-    void outputPageTable();
     friend istream &operator >>(istream &in_stream, pageTable &page);
     friend ostream &operator <<(ostream &out_stream, pageTable &page);
     void operator =(pageTable &page);
