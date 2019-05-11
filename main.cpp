@@ -183,9 +183,8 @@ int main(){
 						}
 					} 	
 				}
-
-			//find page in process page table 
 		}
+
 		if(status == 'R'){//Read from page
 			//locate process with PID in process array
 			for(int i = 0; i < 50; i++){
@@ -198,7 +197,24 @@ int main(){
 			}
 			//find page in process page table 
 			//set accessTimeStamp 
-		
+			int index = 0;
+			swapSpaceIndex = 0;
+			bool needSwapAlgo = false;
+			bool swapHappens = false;
+			while(physicalPages[index].isAllocated){ 
+				index++;//find free page
+				if(index > 19){
+					index = 0;
+					swapHappens = true;
+					while(physicalPages[PA].dirty){
+						//find unmodified page 
+						index++;			
+						if(index > 19){
+							//if no clean page found
+							index = 0;
+							needSwapAlgo = true; //need a swap algorithm
+							break;
+						}
 		}
 		if(status == 'F'){//free page 
 			//locate process with PID in process array
@@ -220,6 +236,7 @@ int main(){
 			//free page in physical pages (using PA found page)
 			
 		}
+
 		if(status == 'T'){//Terminate process
 			for(int i = 0; i < 50; i++){
 				if(Processes[i].PID == PID){
