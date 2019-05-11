@@ -269,7 +269,7 @@ int main()
 
                     break;
                 }
-                else if (Processes[i].processID == PID
+                else if (Processes[i].PID == PID
                         && Processes[i].pages[VA].isAllocated == false)
                 {
                     delete Processes[i].pages;
