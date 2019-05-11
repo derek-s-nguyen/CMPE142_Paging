@@ -151,198 +151,226 @@ int main()
                 }
             }
 
-            //1(a).If Process has no pages
+            //not sure where to include this, but i added some code that will consider the case where process tries to access a page that is not allocated
+//            for (int i = 0; i < 50; i++)
+//            {
+//                if (Processes[i].PID == PID
+//                        && !physicalPages[PA].isAllocated == false
+//                        && Processes[i].pages[VA].isAllocated == false)
+//                {
+//                    delete Processes[i].pages;
+//                    for (int i = 0; i < 20; i++)
+//                    {
+//
+//                        if (physicalPages[i].processID == PID)
+//                        {
+//                            physicalPages[i].isAllocated = false;
+//                            physicalPages[i].virtualAddress = 0;
+//                            physicalPages[i].dirty = false;
+//                            physicalPages[i].accessed = 0;
+//                            physicalPages[i].processID = 0;
+//
+//                        }
+//                        break;
+//                    }
+//                }
 
-            //use pageTable ptr in process object to make dynamic pagetable array
-            //assign VA and PA
-            //
-            //1(b).If Process already has pages
+                //1(a).If Process has no pages
 
-            //find free space in page table and assign VA and PA
-            //
-            //2. place page in physical PageTable (PA and VA)
+                //use pageTable ptr in process object to make dynamic pagetable array
+                //assign VA and PA
+                //
+                //1(b).If Process already has pages
 
-            //3. change index to next free page in the physical pages
+                //find free space in page table and assign VA and PA
+                //
+                //2. place page in physical PageTable (PA and VA)
 
-        }
-        if (status == 'W')
-        { //write into page for PID
+                //3. change index to next free page in the physical pages
 
-            //locate process with PID in the processes array and write into that page
-            for (int i = 0; i < 50; i++)
-            {
-
-                if (Processes[i].PID == PID)
-                {
-                    Processes[i].pages[VA].dirty = true; //make dirty teehee ;)
-                    physicalPages[Processes[i].pages[VA].physicalAddress].dirty =
-                            true;
-                    physicalPages[Processes[i].pages[VA].physicalAddress].accessed =
-                            accessTimeStamp;
-                    accessTimeStamp++;
-                    break;
-                }
             }
-            //swap pages if index is out of range and look for free pages
-            /*int index = 0;
-             swapSpaceIndex = 0;
-             bool needSwapAlgo = false;
-             bool swapHappens = false;
-             while(physicalPages[index].isAllocated){
-             index++;//find free page
-             if(index > 19){
-             index = 0;
-             swapHappens = true;
-             while(physicalPages[index].dirty){
-             //find unmodified page
-             index++;
-             if(index > 19){
-             //if no clean page found
-             index = 0;
-             needSwapAlgo = true; //need a swap algorithm
-             break;
-             }
-             }
-             }
-             }
-             */
-        }
+            if (status == 'W')
+            { //write into page for PID
 
-        if (status == 'R')
-        { //Read from page
-          //locate process with PID in process array
-            for (int i = 0; i < 50; i++)
-            {
-                if (Processes[i].PID == PID)
+                //locate process with PID in the processes array and write into that page
+                for (int i = 0; i < 50; i++)
                 {
-                    Processes[i].pages[VA].accessed = accessTimeStamp;
-                    physicalPages[Processes[i].pages[VA].physicalAddress].accessed =
-                            accessTimeStamp;
-                    accessTimeStamp++;
-                    break;
+
+                    if (Processes[i].PID == PID)
+                    {
+                        Processes[i].pages[VA].dirty = true; //make dirty teehee ;)
+                        physicalPages[Processes[i].pages[VA].physicalAddress].dirty =
+                                true;
+                        physicalPages[Processes[i].pages[VA].physicalAddress].accessed =
+                                accessTimeStamp;
+                        accessTimeStamp++;
+                        break;
+                    }
                 }
-            }
-            //find page in process page table
-            //set accessTimeStamp
-
-            /*int index = 0;
-             swapSpaceIndex = 0;
-             bool needSwapAlgo = false;
-             bool swapHappens = false;
-             while(physicalPages[index].isAllocated){
-             index++;//find free page
-             if(index > 19){
-             index = 0;
-             swapHappens = true;
-             while(physicalPages[index].dirty){
-             //find unmodified page
-             index++;
-             if(index > 19){
-             //if no clean page found
-             index = 0;
-             needSwapAlgo = true; //need a swap algorithm
-             break;
-             }
-             }
-             }
-
-             }*/
-
-        }
-        if (status == 'F')
-        { //free page
-          //locate process with PID in process array
-            for (int i = 0; i < 50; i++)
-            {
-                if (Processes[i].PID == PID
-                        && Processes[i].pages[VA].isAllocated == true)
-                {
-                    Processes[i].pages[VA].isAllocated = false;
-                    Processes[i].pages[VA].isFreed = true;
-                    physicalPages[Processes[i].pages[VA].physicalAddress].isAllocated =
-                            false;
-                    physicalPages[Processes[i].pages[VA].physicalAddress].virtualAddress =
-                            0;
-                    physicalPages[Processes[i].pages[VA].physicalAddress].dirty =
-                            false;
-                    physicalPages[Processes[i].pages[VA].physicalAddress].accessed =
-                            0;
-
-                    break;
-                }
-                else if (Processes[i].PID == PID
-                        && Processes[i].pages[VA].isAllocated == false)
-                {
-                    delete Processes[i].pages;
-                } //deletes the page table assigned to the process since it tries to free an allocated page
+                //swap pages if index is out of range and look for free pages
+                /*int index = 0;
+                 swapSpaceIndex = 0;
+                 bool needSwapAlgo = false;
+                 bool swapHappens = false;
+                 while(physicalPages[index].isAllocated){
+                 index++;//find free page
+                 if(index > 19){
+                 index = 0;
+                 swapHappens = true;
+                 while(physicalPages[index].dirty){
+                 //find unmodified page
+                 index++;
+                 if(index > 19){
+                 //if no clean page found
+                 index = 0;
+                 needSwapAlgo = true; //need a swap algorithm
+                 break;
+                 }
+                 }
+                 }
+                 }
+                 */
             }
 
-            //find page in process page table
-            //free page in process page table
-            //free page in physical pages (using PA found page)
+            if (status == 'R')
+            { //Read from page
+              //locate process with PID in process array
+                for (int i = 0; i < 50; i++)
+                {
+                    if (Processes[i].PID == PID)
+                    {
+                        Processes[i].pages[VA].accessed = accessTimeStamp;
+                        physicalPages[Processes[i].pages[VA].physicalAddress].accessed =
+                                accessTimeStamp;
+                        accessTimeStamp++;
+                        break;
+                    }
+                }
+                //find page in process page table
+                //set accessTimeStamp
+
+                /*int index = 0;
+                 swapSpaceIndex = 0;
+                 bool needSwapAlgo = false;
+                 bool swapHappens = false;
+                 while(physicalPages[index].isAllocated){
+                 index++;//find free page
+                 if(index > 19){
+                 index = 0;
+                 swapHappens = true;
+                 while(physicalPages[index].dirty){
+                 //find unmodified page
+                 index++;
+                 if(index > 19){
+                 //if no clean page found
+                 index = 0;
+                 needSwapAlgo = true; //need a swap algorithm
+                 break;
+                 }
+                 }
+                 }
+
+                 }*/
+
+            }
+            if (status == 'F')
+            { //free page
+              //locate process with PID in process array
+                for (int i = 0; i < 50; i++)
+                {
+                    if (Processes[i].PID == PID
+                            && Processes[i].pages[VA].isAllocated == true)
+                    {
+                        Processes[i].pages[VA].isAllocated = false;
+                        Processes[i].pages[VA].isFreed = true;
+                        physicalPages[Processes[i].pages[VA].physicalAddress].isAllocated =
+                                false;
+                        physicalPages[Processes[i].pages[VA].physicalAddress].virtualAddress =
+                                0;
+                        physicalPages[Processes[i].pages[VA].physicalAddress].dirty =
+                                false;
+                        physicalPages[Processes[i].pages[VA].physicalAddress].accessed =
+                                0;
+
+                        break;
+                    }
+                    else if (Processes[i].PID == PID
+                            && Processes[i].pages[VA].isAllocated == false)
+                    {
+                        delete Processes[i].pages;
+                        break;
+                    } //deletes the page table assigned to the process since it tries to free an allocated page
+                }
+
+                //find page in process page table
+                //free page in process page table
+                //free page in physical pages (using PA found page)
+
+            }
+
+            if (status == 'T')
+            {
+                //Terminate process
+                for (int i = 0; i < 50; i++)
+                {
+                    if (Processes[i].PID == PID
+                            && Processes[i].pages[VA].isAllocated == true)
+                    {
+                        //finds Process
+                        Processes[i].isCreated = false; //Not allocated anymore
+                        Processes[i].isTerminated = true; //deemed terminated
+                        Processes[i].pages = NULL; //page table ptr points to NULL
+                        break;
+                    }
+                    else if (Processes[i].PID == PID
+                            && Processes[i].pages[VA].isAllocated == false)
+                    {
+                        delete Processes[i].pages;
+                        break;
+                    } //deletes the page table assigned to the process since it tries to free an allocated page and reset everything
+                }
+
+                //dealing with the physical memory
+                for (int i = 0; i < 20; i++)
+                {
+
+                    if (physicalPages[i].processID == PID)
+                    {
+                        physicalPages[i].isAllocated = false;
+                        physicalPages[i].virtualAddress = 0;
+                        physicalPages[i].dirty = false;
+                        physicalPages[i].accessed = 0;
+                        physicalPages[i].processID = 0;
+
+                    }
+                }
+
+                //locate process with PID in process array
+                //set isTerminated to true
+                //delete array (deallocate)
+                //remove physical pages (reset them or whatever)
+
+                //now trying to do swap by looking for allocated pages
+
+                //case: if a process tries to swap with an allocated page
+            }
 
         }
 
-        if (status == 'T')
+        cout << "PID\t" << "VA\t" << "PA\t" << "Dirty?\t" << "Access\t" << endl;
+        cout << "___________________________________________________________"
+                << endl;
+        for (int i = 0; i < 20; i++)
         {
-            //Terminate process
-            for (int i = 0; i < 50; i++)
-            {
-                if (Processes[i].PID == PID)
-                {
-                    //finds Process
-                    Processes[i].isCreated = false; //Not allocated anymore
-                    Processes[i].isTerminated = true; //deemed terminated
-                    Processes[i].pages = NULL; //page table ptr points to NULL
-                    break;
-                }
-            }
 
-            for (int i = 0; i < 20; i++)
-            {
+            cout << physicalPages[i].processID << "\t"
+                    << physicalPages[i].virtualAddress << "\t" << i << "\t";
+            if (physicalPages[i].dirty == true)
+                cout << "Yes" << "\t" << physicalPages[i].accessed << endl;
+            if (physicalPages[i].dirty == false)
+                cout << "No" << "\t" << physicalPages[i].accessed << endl;
 
-                if (physicalPages[i].processID == PID)
-                {
-                    physicalPages[i].isAllocated = false;
-                    physicalPages[i].virtualAddress = 0;
-                    physicalPages[i].dirty = false;
-                    physicalPages[i].accessed = 0;
-                    physicalPages[i].processID = 0;
-
-                }
-                else if (Processes[i].PID == PID
-                        && Processes[i].pages[VA].isAllocated == false)
-                {
-                    delete Processes[i].pages;
-                } //deletes the page table assigned to the process since it tries to free an allocated page
-
-            }
-
-            //locate process with PID in process array
-            //set isTerminated to true
-            //delete array (deallocate)
-            //remove physical pages (reset them or whatever)
-
-            //now trying to do swap by looking for allocated pages
-
-            //case: if a process tries to swap with an allocated page
         }
 
     }
 
-    cout << "PID\t" << "VA\t" << "PA\t" << "Dirty?\t" << "Access\t" << endl;
-    cout << "___________________________________________________________"
-            << endl;
-    for (int i = 0; i < 20; i++)
-    {
-
-        cout << physicalPages[i].processID << "\t"
-                << physicalPages[i].virtualAddress << "\t" << i << "\t";
-        if (physicalPages[i].dirty == true)
-            cout << "Yes" << "\t" << physicalPages[i].accessed << endl;
-        if (physicalPages[i].dirty == false)
-            cout << "No" << "\t" << physicalPages[i].accessed << endl;
-
-    }
-
-}
