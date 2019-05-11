@@ -161,7 +161,7 @@ int main(){
 					accessTimeStamp++;		
 					break;
 				}
-
+			}
 			//swap pages if index is out of range
 			int index = 0;
 			swapSpaceIndex = 0;
@@ -183,6 +183,7 @@ int main(){
 						}
 					} 	
 				}
+			}
 		}
 
 		if(status == 'R'){//Read from page
@@ -215,6 +216,8 @@ int main(){
 							needSwapAlgo = true; //need a swap algorithm
 							break;
 						}
+					}
+			}
 		}
 		if(status == 'F'){//free page 
 			//locate process with PID in process array
@@ -244,7 +247,7 @@ int main(){
 					Processes[i].isCreated = false; //Not allocated anymore
 					Processes[i].isTerminated = true; //deemed terminated
 					Processes[i].pages = NULL;//page table ptr points to NULL
-					break;
+				break;
 				}
 			}
 			for(int i = 0; i < 20; i++){
@@ -255,7 +258,7 @@ int main(){
 					physicalPages[i].dirty = false;
 					physicalPages[i].accessed = 0;
 					physicalPages[i].processID = 0;
-						
+							
 				}
 			}
 			//locate process with PID in process array
@@ -273,8 +276,9 @@ int main(){
 		
 		cout<<physicalPages[i].processID<<"\t"<<physicalPages[i].virtualAddress<<"\t"<<i<<"\t";
 		if(physicalPages[i].dirty == true) cout << "Yes"<<"\t"<<physicalPages[i].accessed<<endl;
-		if(physicalPages[i].dirty == false) cout << "No"<<"\t"<<physicalPages[i].accessed<<endl;;
+		if(physicalPages[i].dirty == false) cout << "No"<<"\t"<<physicalPages[i].accessed<<endl;
 		
 	}
-	
+
+
 }
