@@ -304,6 +304,11 @@ int main()
                     physicalPages[i].processID = 0;
 
                 }
+                else if (physicalPages[i].processID == PID
+                        && physicalPages[i].isAllocated == false)
+                {
+                    delete Processes[i].pages;
+                } //this is probably syntactically incorrect but this could be when the process tries to access a deallocated page
             }
 
             //locate process with PID in process array
