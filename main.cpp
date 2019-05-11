@@ -28,8 +28,8 @@ int main(){
     	ifstream in_stream;
     	in_stream.open("memory.dat");
 
-	while(!in_stream.eof()){
-    		in_stream >> PID;
+	while(in_stream >> PID){
+		
 		cout << PID;
     		in_stream >> status;
 		cout << status;
@@ -110,7 +110,9 @@ int main(){
 			for(int i = 0; i < 50; i++){
 				if(Processes[i].PID == PID){
 					Processes[i].pages[VA].dirty = true;
-					physicalPages[Processes[i].pages[VA].physicalAddress].dirty = true;	
+					physicalPages[Processes[i].pages[VA].physicalAddress].dirty = true;
+					physicalPages[Processes[i].pages[VA].physicalAddress].accessed = accessTimeStamp;
+					accessTimeStamp++;		
 					break;
 				}
 			}
@@ -137,6 +139,7 @@ int main(){
 			for(int i = 0; i < 50; i++){
 				if(Processes[i].PID == PID){
 					Processes[i].pages[VA].isAllocated = false;
+					Processes[i].pages[VA].isFreed = true;
 					physicalPages[Processes[i].pages[VA].physicalAddress].isAllocated = false;
 					physicalPages[Processes[i].pages[VA].physicalAddress].virtualAddress = 0;
 					physicalPages[Processes[i].pages[VA].physicalAddress].dirty = false;
@@ -145,12 +148,32 @@ int main(){
 					break;
 				}
 			}
+			
 			//find page in process page table
 			//free page in process page table 
 			//free page in physical pages (using PA found page)
 			
 		}
 		if(status == 'T'){//Terminate process
+			for(int i = 0; i < 50; i++){
+				if(Processes[i].PID == PID){//finds Process
+					//Processes[i].isCreated = false;//Not allocated anymore
+					Processes[i].isTerminated = true;//deemed terminated
+					Processes[i].pages = NULL;//page table ptr points to NULL
+					break;
+				}
+			}
+			for(int i = 0; i < 20; i++){
+
+				if(physicalPages[i].processID == PID){
+					physicalPages[i].isAllocated = false;
+					physicalPages[i].virtualAddress = 0;
+					physicalPages[i].dirty = false;
+					physicalPages[i].accessed = 0;
+					physicalPages[i].processID = 0;
+						
+				}
+			}
 			//locate process with PID in process array
 			//set isTerminated to true 
 			//delete array (deallocate)
@@ -164,7 +187,7 @@ int main(){
 	cout<<"___________________________________________________________"<<endl;
 	for(int i = 0; i < 20; i++){
 		
-		cout<<physicalPages[i];
+		cout<<physicalPages[i].processID<<"\t"<<physicalPages[i].virtualAddress<<"\t"<<i<<"\t";
 		if(physicalPages[i].dirty == true) cout << "Yes"<<"\t"<<physicalPages[i].accessed<<endl;
 		if(physicalPages[i].dirty == false) cout << "No"<<"\t"<<physicalPages[i].accessed<<endl;;
 		
