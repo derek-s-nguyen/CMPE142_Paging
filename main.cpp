@@ -30,9 +30,9 @@ int main()
     while (in_stream >> PID)
     {
 
-        cout << PID;
+        cout << PID<<"\t";
         in_stream >> status;
-        cout << status;
+        cout << status<<"\t";
         if (status == 'A' || status == 'W' || status == 'F' || status == 'R')
         {
             in_stream >> VA;
@@ -96,15 +96,10 @@ int main()
 	     cout<<"need swap algo"<<endl;
 	     //should set PA to the page that will be swapped
             }
-		
-            cout << "PA found:" << PA << endl;
             for (int i = 0; i < 50; i++)
             {
                 if (Processes[i].PID == PID)
                 {
-                    cout << Processes[i].pages << endl;
-                    cout << "PID:" << PID << endl;
-                    cout << "Process found" << endl;
 
                     if (swapHappens)
                     {
@@ -140,7 +135,7 @@ int main()
                     if (Processes[i].pages == NULL)
                     {
                         Processes[i].pages = new pageTable[1000];
-                        cout << "page Table pointed successfully" << endl;
+                   
                         Processes[i].pages[VA].virtualAddress = VA;
                         Processes[i].pages[VA].physicalAddress = PA;
                         Processes[i].pages[VA].isAllocated = true;
@@ -148,8 +143,8 @@ int main()
                     }
                     else
                     {
-                        cout << "process has already page table so adding PTE"
-                                << endl;
+                       
+                            
                         Processes[i].pages[VA].virtualAddress = VA;
                         Processes[i].pages[VA].physicalAddress = PA;
                         Processes[i].pages[VA].isAllocated = true;
