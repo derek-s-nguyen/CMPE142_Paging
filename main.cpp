@@ -94,7 +94,7 @@ int main()
 	    
             if(needSwapAlgo){
 	     cout<<"need swap algo"<<endl;
-	     //should set PA to the page that will be swapped
+	     //will find PA using the swap algo
             }
             for (int i = 0; i < 50; i++)
             {
@@ -201,6 +201,8 @@ int main()
         { //write into page for PID
             bool writeSwap = false;
 	    bool writeSwapWithAlgo = false;
+	    swapSpaceIndex = 0;
+	    
             //locate process with PID in the processes array and write into that page
 	    
             for (int i = 0; i < 50; i++)
@@ -232,8 +234,50 @@ int main()
                     break;
 		   }
 
-		   //write swap here
+		   //if page wants to be writen to but is located in swap
+		   if(Processes[i].pages[VA].isAllocated && Processes[i].pages[VA].inSwapSpace){
+			 //find process in swap space
+			for(int pageFoundInSwap = 0; pageFoundInSwap < 40; pageFoundInSwap++){
+				if(swapSpace[pageFoundInSwap].processID == PID && swapSpace[pageFoundInSwap].virtualAddress == VA)break;
+			}
+			 //find free space in swap
+			while (swapSpace[swapSpaceIndex].isAllocated && swapSpaceIndex < 40)
+                        {
+                            swapSpaceIndex++;
+                        }
+			//look for clean pages in physical memory
+			for(int swapPageIndex = 0; swapPageIndex < 20; swapPageIndex++){
+				if(!physicalPages[swapPageIndex].dirty){ 
+					writeSwapWithAlgo = false;
+					break;
+				}
+			}
+
+ 			if(writeSwapWithAlgo){
+				cout<<"need swap policy"<<endl;
+		
+		   	}
+			/*	//copying physical page into swap space 
+				  swapSpace[swapSpaceIndex].processID =
+                                physicalPages[swapPageIndex].processID;
+                        swapSpace[swapSpaceIndex].virtualAddress =
+                                physicalPages[swapPageIndex].virtualAddress;
+                        swapSpace[swapSpaceIndex].isAllocated = true;
+                        swapSpace[swapSpaceIndex].dirty =
+                                physicalPages[swapPageIndex].dirty;
+
+                        physicalPages[swapPageIndex].processID = swapSpace[pageFoundInSwap].processID;
+			physicalPages[swapPageIndex].virtualAddress = swapSpace[pageFoundInSwap].virtualAddress;
+			physicalPages[swapPageIndex].inSwapSpace = true;
+			physicalPages[swapPageIndex].virtualAddress = swapSpace[pageFoundInSwap].virtualAddress;
+			*/
+
+
+
+			
+		   }
 		  
+
 		   else{
                     	Processes[i].pages[VA].dirty = true; //make dirty teehee ;)
                     	physicalPages[Processes[i].pages[VA].physicalAddress].dirty =
