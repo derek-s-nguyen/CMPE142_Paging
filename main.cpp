@@ -223,7 +223,7 @@ int main()
                     break;
 		   }
 
-
+		   //write swap here
 		  
 		   else{
                     	Processes[i].pages[VA].dirty = true; //make dirty teehee ;)
