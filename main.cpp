@@ -63,6 +63,7 @@ int main()
 	    }
             Processes[newProcessIndex].PID = PID;
             Processes[newProcessIndex].isCreated = true;
+	    Processes[newProcessIndex].isTerminated = false;
             //Processes[newProcessIndex].pages = NULL;
 
         }
