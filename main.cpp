@@ -266,8 +266,7 @@ int main()
           //locate process with PID in process array
             for (int i = 0; i < 50; i++)
             {
-              		/*
-                   if (Processes[i].PID == PID){   
+                   if(Processes[i].PID == PID){   
 		   	if(!Processes[i].pages[VA].isAllocated){//page trying to write to is not allocated
 		     		for (int killIndex = 0; killIndex < 20; killIndex++){//search for process pages in memory to kill
                		 		if (physicalPages[killIndex].processID == PID){
@@ -293,14 +292,16 @@ int main()
                     		Processes[i].pages = NULL; //page table ptr points to NULL
                     		break;
 			}
+			else{
+                    		Processes[i].pages[VA].accessed = accessTimeStamp;
+                    		physicalPages[Processes[i].pages[VA].physicalAddress].accessed =
+                            	accessTimeStamp;
+                    		accessTimeStamp++;
+                    		break;
+		   	}
+
 		   }
-		   else{*/
-                    	Processes[i].pages[VA].accessed = accessTimeStamp;
-                    	physicalPages[Processes[i].pages[VA].physicalAddress].accessed =
-                            accessTimeStamp;
-                    	accessTimeStamp++;
-                    	break;
-		 //  }
+		   
                 
             }
             //find page in process page table
