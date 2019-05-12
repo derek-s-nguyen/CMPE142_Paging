@@ -20,7 +20,6 @@ int main()
     int VA; //Virtual Address
     char status; //Process Action
     int processActionCounter = 0; //# of instructions
-    int newProcessIndex = 0; //index where new process will be created
     int accessTimeStamp = 1; //determine when page was accessed
     int PA;
     int swapSpaceIndex = 0;
@@ -46,10 +45,24 @@ int main()
 
         if (status == 'C')
         { //create the process in processes array
+	    int newProcessIndex; //index where new process will be created
+	    bool terminatedProcessFound = false;
+	    for(newProcessIndex = 0; newProcessIndex < 50; newProcessIndex++){
 
+		if(Processes[newProcessIndex].PID == PID && Processes[newProcessIndex].isTerminated){terminatedProcessFound = true; break;}
+		
+
+	    }
+
+	    if(!terminatedProcessFound){
+		for(newProcessIndex = 0; newProcessIndex < 50; newProcessIndex++){
+
+			if(!Processes[newProcessIndex].isCreated) break;
+		}
+
+	    }
             Processes[newProcessIndex].PID = PID;
             Processes[newProcessIndex].isCreated = true;
-            newProcessIndex++;
             //Processes[newProcessIndex].pages = NULL;
 
         }
