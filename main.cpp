@@ -61,30 +61,28 @@ int main()
             swapSpaceIndex = 0;
             bool needSwapAlgo = false;
             bool swapHappens = false;
-            while (physicalPages[PA].isAllocated)
+
+            for(PA = 0; PA < 20; PA++)
             {
-                PA++; //find free page
-                if (PA > 19)
-                {
-                    //if no free page look for unmodified page
-                    PA = 0;
-                    swapHappens = true; //a swap will happen but not sure if it is clean page swap or swap algo
-                    while (physicalPages[PA].dirty)
-                    {
-                        //find unmodified page
-                        PA++;
-                        if (PA > 19)
-                        {
-                            //if no clean page found
-                            PA = 0;
-                            needSwapAlgo = true; //need a swap algorithm
-                            break;
-                        }
-                    }
-                }
+                //find free page
+		if(!physicalPages[PA].isAllocated) break;
+		if(PA == 19 && physicalPages[PA].isAllocated) swapHappens = true;
 
             }
 
+	    if(swapHappens){
+		for(PA = 0; PA < 20; PA++){
+		if(!physicalPages[PA].dirty) break;
+		if(PA == 19 && physicalPages[PA].dirty) needSwapAlgo = true;
+		}
+	    
+	    }
+	    
+            if(needSwapAlgo){
+	     cout<<"need swap algo"<<endl;
+	     //should set PA to the page that will be swapped
+            }
+		
             cout << "PA found:" << PA << endl;
             for (int i = 0; i < 50; i++)
             {
@@ -94,7 +92,7 @@ int main()
                     cout << "PID:" << PID << endl;
                     cout << "Process found" << endl;
 
-                    if (swapHappens && !needSwapAlgo)
+                    if (swapHappens)
                     {
                         //find an empty page in swap space
                         while (swapSpace[swapSpaceIndex].isAllocated)
@@ -127,7 +125,7 @@ int main()
                     }
                     if (Processes[i].pages == NULL)
                     {
-                        Processes[i].pages = new pageTable[20];
+                        Processes[i].pages = new pageTable[1000];
                         cout << "page Table pointed successfully" << endl;
                         Processes[i].pages[VA].virtualAddress = VA;
                         Processes[i].pages[VA].physicalAddress = PA;
@@ -196,7 +194,6 @@ int main()
             //locate process with PID in the processes array and write into that page
             for (int i = 0; i < 50; i++)
             {
-
                 if (Processes[i].PID == PID)
                 {
                     Processes[i].pages[VA].dirty = true; //make dirty teehee ;)
@@ -357,7 +354,8 @@ int main()
         }
 
     }
-
+    //Print out physical memory
+    cout<<"PHYSICAL MEMORY"<<endl;
     cout << "PID\t" << "VA\t" << "PA\t" << "Dirty?\t" << "Access\t" << endl;
     cout << "___________________________________________________________"
             << endl;
@@ -371,6 +369,19 @@ int main()
         if (physicalPages[i].dirty == false)
             cout << "No" << "\t" << physicalPages[i].accessed << endl;
 
+    }
+    //Print out swap
+    cout<<"SWAP SPACE"<<endl;
+    cout << "PID\t" << "VA\t" << "Dirty?\t" << "Access\t" << endl;
+    cout << "___________________________________________________________"<<endl;
+    for (int i = 0; i < 20; i++)
+    {
+        cout << swapSpace[i].processID << "\t"
+                << swapSpace[i].virtualAddress << "\t";
+        if (swapSpace[i].dirty == true)
+            cout << "Yes" << "\t" << physicalPages[i].accessed << endl;
+        if (swapSpace[i].dirty == false)
+            cout << "No" << "\t" << physicalPages[i].accessed << endl;
     }
 
 }
