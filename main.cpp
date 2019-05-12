@@ -65,15 +65,15 @@ int main()
             for(PA = 0; PA < 20; PA++)
             {
                 //find free page
-		if(!physicalPages[PA].isAllocated) break;
-		if(PA == 19 && physicalPages[PA].isAllocated) swapHappens = true;
+		if(!physicalPages[PA].isAllocated) break;//found free page then break and pass PA to allocation
+		if(PA == 19 && physicalPages[PA].isAllocated) swapHappens = true;//all pages are taken
 
             }
 
-	    if(swapHappens){
-		for(PA = 0; PA < 20; PA++){
-		if(!physicalPages[PA].dirty) break;
-		if(PA == 19 && physicalPages[PA].dirty) needSwapAlgo = true;
+	    if(swapHappens){//need to swap
+		for(PA = 0; PA < 20; PA++){//cycle through physical pages
+		if(!physicalPages[PA].dirty) break;//if page clean, pass PA to allocation
+		if(PA == 19 && physicalPages[PA].dirty) needSwapAlgo = true;//all pages are dirty
 		}
 	    
 	    }
@@ -190,19 +190,50 @@ int main()
         }
         if (status == 'W')
         { //write into page for PID
-
+            bool writeSwap = false;
+	    bool writeSwapWithAlgo = false;
             //locate process with PID in the processes array and write into that page
+	    
             for (int i = 0; i < 50; i++)
             {
-                if (Processes[i].PID == PID)
-                {
-                    Processes[i].pages[VA].dirty = true; //make dirty teehee ;)
-                    physicalPages[Processes[i].pages[VA].physicalAddress].dirty =
-                            true;
-                    physicalPages[Processes[i].pages[VA].physicalAddress].accessed =
-                            accessTimeStamp;
-                    accessTimeStamp++;
+                if (Processes[i].PID == PID){   
+		   if(!Processes[i].pages[VA].isAllocated){//page trying to write to is not allocated
+		     for (int killIndex = 0; killIndex < 20; killIndex++){//search for process pages in memory to kill
+               		 if (physicalPages[killIndex].processID == PID){
+                    		physicalPages[killIndex].isAllocated = false;
+                    		physicalPages[killIndex].virtualAddress = 0;
+                    		physicalPages[killIndex].dirty = false;
+                    		physicalPages[killIndex].accessed = 0;
+                    		physicalPages[killIndex].processID = 0;
+                	}
+            	     }
+		     for(int killSwapIndex = 0; killSwapIndex < 40; killSwapIndex++){//search for process pages in swap space to kill
+			if(swapSpace[killSwapIndex].processID == PID){
+				swapSpace[killSwapIndex].isAllocated = false;
+                    		swapSpace[killSwapIndex].virtualAddress = 0;
+                    		swapSpace[killSwapIndex].dirty = false;
+                    		swapSpace[killSwapIndex].accessed = 0;
+                    		swapSpace[killSwapIndex].processID = 0;
+			}
+		     }
+               	     //finds Process
+                    Processes[i].isCreated = false; //Not allocated anymore
+                    Processes[i].isTerminated = true; //deemed terminated
+                    Processes[i].pages = NULL; //page table ptr points to NULL
                     break;
+		   }
+
+
+		  
+		   else{
+                    	Processes[i].pages[VA].dirty = true; //make dirty teehee ;)
+                    	physicalPages[Processes[i].pages[VA].physicalAddress].dirty =
+                            true;
+                    	physicalPages[Processes[i].pages[VA].physicalAddress].accessed =
+                            accessTimeStamp;
+                    	accessTimeStamp++;
+                   	break;
+		   }
                 }
             }
             //swap pages if index is out of range and look for free pages
@@ -235,14 +266,42 @@ int main()
           //locate process with PID in process array
             for (int i = 0; i < 50; i++)
             {
-                if (Processes[i].PID == PID)
-                {
-                    Processes[i].pages[VA].accessed = accessTimeStamp;
-                    physicalPages[Processes[i].pages[VA].physicalAddress].accessed =
+              		/*
+                   if (Processes[i].PID == PID){   
+		   	if(!Processes[i].pages[VA].isAllocated){//page trying to write to is not allocated
+		     		for (int killIndex = 0; killIndex < 20; killIndex++){//search for process pages in memory to kill
+               		 		if (physicalPages[killIndex].processID == PID){
+                    				physicalPages[killIndex].isAllocated = false;
+                    				physicalPages[killIndex].virtualAddress = 0;
+                    				physicalPages[killIndex].dirty = false;
+                    				physicalPages[killIndex].accessed = 0;
+                    				physicalPages[killIndex].processID = 0;
+                			}
+            	     		}
+		     		for(int killSwapIndex = 0; killSwapIndex < 40; killSwapIndex++){//search for process pages in swap space to kill
+					if(swapSpace[killSwapIndex].processID == PID){
+						swapSpace[killSwapIndex].isAllocated = false;
+                    				swapSpace[killSwapIndex].virtualAddress = 0;
+                    				swapSpace[killSwapIndex].dirty = false;
+                    				swapSpace[killSwapIndex].accessed = 0;
+                    				swapSpace[killSwapIndex].processID = 0;
+					}
+		     		}
+               	     		//finds Process
+                    		Processes[i].isCreated = false; //Not allocated anymore
+                    		Processes[i].isTerminated = true; //deemed terminated
+                    		Processes[i].pages = NULL; //page table ptr points to NULL
+                    		break;
+			}
+		   }
+		   else{*/
+                    	Processes[i].pages[VA].accessed = accessTimeStamp;
+                    	physicalPages[Processes[i].pages[VA].physicalAddress].accessed =
                             accessTimeStamp;
-                    accessTimeStamp++;
-                    break;
-                }
+                    	accessTimeStamp++;
+                    	break;
+		 //  }
+                
             }
             //find page in process page table
             //set accessTimeStamp
@@ -271,6 +330,7 @@ int main()
              }*/
 
         }
+
         if (status == 'F')
         { //free page
           //locate process with PID in process array
@@ -288,6 +348,8 @@ int main()
                     physicalPages[Processes[i].pages[VA].physicalAddress].dirty =
                             false;
                     physicalPages[Processes[i].pages[VA].physicalAddress].accessed =
+                            0;
+		     physicalPages[Processes[i].pages[VA].physicalAddress].processID =
                             0;
 
                     break;
@@ -329,8 +391,7 @@ int main()
             }
 
             //dealing with the physical memory
-            for (int i = 0; i < 20; i++)
-            {
+            for (int i = 0; i < 20; i++){
 
                 if (physicalPages[i].processID == PID)
                 {
