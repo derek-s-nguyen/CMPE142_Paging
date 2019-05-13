@@ -24,7 +24,6 @@ public:
     int accessed;
     bool isFreed;
     bool isAllocated; //bool to check if the page is allocated or not
-    char processAction; //create, allocate, write, read
     bool inSwapSpace;
 };
 

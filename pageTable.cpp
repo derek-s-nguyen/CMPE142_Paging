@@ -18,7 +18,6 @@ Process::Process(){
 }
 pageTable::pageTable(){
     processID = 0;
-    processAction = NULL;
     dirty = false;
     isAllocated = false;
     accessed = 0;
