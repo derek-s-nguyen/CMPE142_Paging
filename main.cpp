@@ -252,6 +252,12 @@ int main()
 				if(!physicalPages[swapPageIndex].dirty){ 
 					writeSwapWithAlgo = false;
                                         //tried implementing the swap here before breaking the loop
+                                        swapSpace[swapSpaceIndex].dirty =true;
+                                        swapSpace[swapSpaceIndex].processID = physicalPages[swapPageIndex].processID;
+                                        swapSpace[swapSpaceIndex].physicalAddress = physicalPages[swapPageIndex].physicalAddress;
+                                        swapSpace[swapSpaceIndex].virtualAddress = physicalPages[swapPageIndex].virtualAddress;
+                                        swapSpace[swapSpaceIndex].inSwapSpace = true;
+
                                         physicalPages[swapPageIndex].dirty = true;
                                         physicalPages[swapPageIndex].processID = swapSpace[swapPageIndex].processID; 
                                         physicalPages[swapPageIndex].inSwapSpace = false;
@@ -351,6 +357,13 @@ int main()
 				if(!physicalPages[swapPageIndex].dirty){ 
 					needSwapForReadAlgo = false;
                                         //tried implementing the swap here before breaking the loop
+                                        swapSpace[swapSpaceIndex].dirty =true;
+                                        swapSpace[swapSpaceIndex].processID = physicalPages[swapPageIndex].processID;
+                                        swapSpace[swapSpaceIndex].physicalAddress = physicalPages[swapPageIndex].physicalAddress;
+                                        swapSpace[swapSpaceIndex].virtualAddress = physicalPages[swapPageIndex].virtualAddress;
+                                        swapSpace[swapSpaceIndex].inSwapSpace = true;
+
+                                        
                                         physicalPages[swapPageIndex].dirty = true;
                                         physicalPages[swapPageIndex].processID = swapSpace[swapPageIndex].processID; 
                                         physicalPages[swapPageIndex].inSwapSpace = false;
