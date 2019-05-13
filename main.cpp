@@ -424,7 +424,7 @@ int main()
                     break;
                 }
                 
-                else if(Processes[i].PID == PID && !Processes[i].pages[VA].isAllocated)){
+                else if(Processes[i].PID == PID && !Processes[i].pages[VA].isAllocated){
                        
                                 //ptrying to free a page that is not allocated
 		     		for (int killIndex = 0; killIndex < 20; killIndex++){
@@ -454,8 +454,18 @@ int main()
                     		break;
 			
                 }
-        //need to consider if user wants to free process in swap space but it is not allocated
-
+        }
+         //need to consider if user wants to free process in swap space
+        for(int freeSwap = 0; freeSwap < 40; freeSwap++){
+                if(swapSpace[freeSwap].processID==PID){
+                        swapSpace[freeSwap].isAllocated = false;
+                        swapSpace[freeSwap].isFreed = true;
+                        swapSpace[freeSwap].accessed = 0;
+                        swapSpace[freeSwap].processID = 0;
+                        swapSpace[freeSwap].virtualAddress = 0;
+                        swapSpace[freeSwap].physicalAddress = 0;
+                        break;
+                }
 
 
 
