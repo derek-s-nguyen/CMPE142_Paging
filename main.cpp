@@ -317,8 +317,10 @@ int main()
             for (int i = 0; i < 50; i++)
             {
                    if(Processes[i].PID == PID){   
-		   	if(!Processes[i].pages[VA].isAllocated){//page trying to write to is not allocated
-		     		for (int killIndex = 0; killIndex < 20; killIndex++){//search for process pages in memory to kill
+		   	if(!Processes[i].pages[VA].isAllocated){
+                                //trying read a page that is not allocated
+		     		for (int killIndex = 0; killIndex < 20; killIndex++){
+                                        //search for process pages in memory to kill
                		 		if (physicalPages[killIndex].processID == PID){
                     				physicalPages[killIndex].isAllocated = false;
                     				physicalPages[killIndex].virtualAddress = 0;
@@ -327,7 +329,8 @@ int main()
                     				physicalPages[killIndex].processID = 0;
                 			}
             	     		}
-		     		for(int killSwapIndex = 0; killSwapIndex < 40; killSwapIndex++){//search for process pages in swap space to kill
+		     		for(int killSwapIndex = 0; killSwapIndex < 40; killSwapIndex++){
+                                             //search for process pages in swap space to kill
 					if(swapSpace[killSwapIndex].processID == PID){
 						swapSpace[killSwapIndex].isAllocated = false;
                     				swapSpace[killSwapIndex].virtualAddress = 0;
@@ -420,6 +423,42 @@ int main()
 
                     break;
                 }
+                
+                else if(Processes[i].PID == PID && !Processes[i].pages[VA].isAllocated)){
+                       
+                                //ptrying to free a page that is not allocated
+		     		for (int killIndex = 0; killIndex < 20; killIndex++){
+                                        //search for process pages in memory to kill
+               		 		if (physicalPages[killIndex].processID == PID){
+                    				physicalPages[killIndex].isAllocated = false;
+                    				physicalPages[killIndex].virtualAddress = 0;
+                    				physicalPages[killIndex].dirty = false;
+                    				physicalPages[killIndex].accessed = 0;
+                    				physicalPages[killIndex].processID = 0;
+                			}
+            	     		}
+		     		for(int killSwapIndex = 0; killSwapIndex < 40; killSwapIndex++){
+                                             //search for process pages in swap space to kill
+					if(swapSpace[killSwapIndex].processID == PID){
+						swapSpace[killSwapIndex].isAllocated = false;
+                    				swapSpace[killSwapIndex].virtualAddress = 0;
+                    				swapSpace[killSwapIndex].dirty = false;
+                    				swapSpace[killSwapIndex].accessed = 0;
+                    				swapSpace[killSwapIndex].processID = 0;
+					}
+		     		}
+               	     		//finds Process
+                    		Processes[i].isCreated = false; //Not allocated anymore
+                    		Processes[i].isTerminated = true; //deemed terminated
+                    		Processes[i].pages = NULL; //page table ptr points to NULL
+                    		break;
+			
+                }
+        //need to consider if user wants to free process in swap space but it is not allocated
+
+
+
+
 //                    else if (Processes[i].PID == PID
 //                            && Processes[i].pages[VA].isAllocated == false)
 //                    {
