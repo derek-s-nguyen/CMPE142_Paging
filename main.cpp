@@ -135,7 +135,6 @@ int main()
                     if (Processes[i].pages == NULL)
                     {
                         Processes[i].pages = new pageTable[1000];
-                   
                         Processes[i].pages[VA].virtualAddress = VA;
                         Processes[i].pages[VA].physicalAddress = PA;
                         Processes[i].pages[VA].isAllocated = true;
@@ -143,8 +142,7 @@ int main()
                     }
                     else
                     {
-                       
-                            
+                    
                         Processes[i].pages[VA].virtualAddress = VA;
                         Processes[i].pages[VA].physicalAddress = PA;
                         Processes[i].pages[VA].isAllocated = true;
@@ -208,8 +206,10 @@ int main()
             for (int i = 0; i < 50; i++)
             {
                 if (Processes[i].PID == PID){   
-		   if(!Processes[i].pages[VA].isAllocated){//page trying to write to is not allocated
-		     for (int killIndex = 0; killIndex < 20; killIndex++){//search for process pages in memory to kill
+		   if(!Processes[i].pages[VA].isAllocated){
+                           //page trying to write to is not allocated
+		     for (int killIndex = 0; killIndex < 20; killIndex++){
+                             //search for process pages in memory to kill
                		 if (physicalPages[killIndex].processID == PID){
                     		physicalPages[killIndex].isAllocated = false;
                     		physicalPages[killIndex].virtualAddress = 0;
@@ -218,7 +218,8 @@ int main()
                     		physicalPages[killIndex].processID = 0;
                 	}
             	     }
-		     for(int killSwapIndex = 0; killSwapIndex < 40; killSwapIndex++){//search for process pages in swap space to kill
+		     for(int killSwapIndex = 0; killSwapIndex < 40; killSwapIndex++){
+                             //search for process pages in swap space to kill
 			if(swapSpace[killSwapIndex].processID == PID){
 				swapSpace[killSwapIndex].isAllocated = false;
                     		swapSpace[killSwapIndex].virtualAddress = 0;
@@ -245,10 +246,18 @@ int main()
                         {
                             swapSpaceIndex++;
                         }
-			//look for clean pages in physical memory
+			
+                        //look for clean pages in physical memory
 			for(int swapPageIndex = 0; swapPageIndex < 20; swapPageIndex++){
 				if(!physicalPages[swapPageIndex].dirty){ 
 					writeSwapWithAlgo = false;
+                                        //tried implementing the swap here before breaking the loop
+                                        physicalPages[swapPageIndex].dirty = true;
+                                        physicalPages[swapPageIndex].processID = swapSpace[swapPageIndex].processID; 
+                                        physicalPages[swapPageIndex].inSwapSpace = false;
+                                        physicalPages[swapPageIndex].isAllocated = true;
+                                        physicalPages[swapPageIndex].physicalAddress = swapSpace[swapPageIndex].physicalAddress;
+                                        physicalPages[swapPageIndex].virtualAddress = swapSpace[swapPageIndex].virtualAddress;
 					break;
 				}
 			}
@@ -289,34 +298,13 @@ int main()
 		   }
                 }
             }
-            //swap pages if index is out of range and look for free pages
-            /*int index = 0;
-             swapSpaceIndex = 0;
-             bool needSwapAlgo = false;
-             bool swapHappens = false;
-             while(physicalPages[index].isAllocated){
-             index++;//find free page
-             if(index > 19){
-             index = 0;
-             swapHappens = true;
-             while(physicalPages[index].dirty){
-             //find unmodified page
-             index++;
-             if(index > 19){
-             //if no clean page found
-             index = 0;
-             needSwapAlgo = true; //need a swap algorithm
-             break;
-             }
-             }
-             }
-             }
-             */
+            
         }
 
         if (status == 'R')
         { //Read from page
           //locate process with PID in process array
+          bool needSwapForReadAlgo = false;
             for (int i = 0; i < 50; i++)
             {
                    if(Processes[i].PID == PID){   
@@ -345,6 +333,38 @@ int main()
                     		Processes[i].pages = NULL; //page table ptr points to NULL
                     		break;
 			}
+
+                        //if page wants to be read to but is located in swap
+		   if(Processes[i].pages[VA].isAllocated && Processes[i].pages[VA].inSwapSpace){
+			 //find process in swap space
+			for(int pageFoundInSwap = 0; pageFoundInSwap < 40; pageFoundInSwap++){
+				if(swapSpace[pageFoundInSwap].processID == PID && swapSpace[pageFoundInSwap].virtualAddress == VA)break;
+			}
+			 //find free space in swap
+			while (swapSpace[swapSpaceIndex].isAllocated && swapSpaceIndex < 40)
+                        {
+                            swapSpaceIndex++;
+                        }
+			
+                        //look for clean pages in physical memory
+			for(int swapPageIndex = 0; swapPageIndex < 20; swapPageIndex++){
+				if(!physicalPages[swapPageIndex].dirty){ 
+					needSwapForReadAlgo = false;
+                                        //tried implementing the swap here before breaking the loop
+                                        physicalPages[swapPageIndex].dirty = true;
+                                        physicalPages[swapPageIndex].processID = swapSpace[swapPageIndex].processID; 
+                                        physicalPages[swapPageIndex].inSwapSpace = false;
+                                        physicalPages[swapPageIndex].isAllocated = true;
+                                        physicalPages[swapPageIndex].physicalAddress = swapSpace[swapPageIndex].physicalAddress;
+                                        physicalPages[swapPageIndex].virtualAddress = swapSpace[swapPageIndex].virtualAddress;
+					break;
+				}
+			}
+
+ 			if(needSwapForReadAlgo){
+				cout<<"need swap policy"<<endl;
+		
+		   	}
 			else{
                     		Processes[i].pages[VA].accessed = accessTimeStamp;
                     		physicalPages[Processes[i].pages[VA].physicalAddress].accessed =
@@ -357,31 +377,7 @@ int main()
 		   
                 
             }
-            //find page in process page table
-            //set accessTimeStamp
-
-            /*int index = 0;
-             swapSpaceIndex = 0;
-             bool needSwapAlgo = false;
-             bool swapHappens = false;
-             while(physicalPages[index].isAllocated){
-             index++;//find free page
-             if(index > 19){
-             index = 0;
-             swapHappens = true;
-             while(physicalPages[index].dirty){
-             //find unmodified page
-             index++;
-             if(index > 19){
-             //if no clean page found
-             index = 0;
-             needSwapAlgo = true; //need a swap algorithm
-             break;
-             }
-             }
-             }
-
-             }*/
+            }
 
         }
 
