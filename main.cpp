@@ -24,6 +24,7 @@ int main()
     int PA;
     int swapSpaceIndex = 0;
     int swapPolicy = 0;
+    int FIFOcounter = 1;
     ifstream in_stream;
     in_stream.open("memory.dat");
 
