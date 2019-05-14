@@ -253,18 +253,29 @@ int main()
 				if(!physicalPages[swapPageIndex].dirty){ 
 					writeSwapWithAlgo = false;
                                         //tried implementing the swap here before breaking the loop
-                                        swapSpace[swapSpaceIndex].dirty =true;
-                                        swapSpace[swapSpaceIndex].processID = physicalPages[swapPageIndex].processID;
-                                        swapSpace[swapSpaceIndex].physicalAddress = physicalPages[swapPageIndex].physicalAddress;
-                                        swapSpace[swapSpaceIndex].virtualAddress = physicalPages[swapPageIndex].virtualAddress;
-                                        swapSpace[swapSpaceIndex].inSwapSpace = true;
+                                        
+                                        //adds the contents of page from physical memory into the free page in swap
+                                        swapSpace[pageFoundInSwap].dirty =true;
+                                        swapSpace[pageFoundInSwap].processID = physicalPages[swapPageIndex].processID;
+                                        swapSpace[pageFoundInSwap].physicalAddress = physicalPages[swapPageIndex].physicalAddress;
+                                        swapSpace[pageFoundInSwap].virtualAddress = physicalPages[swapPageIndex].virtualAddress;
+                                        swapSpace[pageFoundInSwap].inSwapSpace = true;
 
+                                        //copying desired process into physical page of memory
                                         physicalPages[swapPageIndex].dirty = true;
-                                        physicalPages[swapPageIndex].processID = swapSpace[pageFoundInSwap].processID; 
+                                        physicalPages[swapPageIndex].processID = swapSpace[swapSpaceIndex].processID; 
                                         physicalPages[swapPageIndex].inSwapSpace = false;
                                         physicalPages[swapPageIndex].isAllocated = true;
-                                        physicalPages[swapPageIndex].physicalAddress = swapSpace[pageFoundInSwap].physicalAddress;
-                                        physicalPages[swapPageIndex].virtualAddress = swapSpace[pageFoundInSwap].virtualAddress;
+                                        physicalPages[swapPageIndex].physicalAddress = swapSpace[swapSpaceIndex].physicalAddress;
+                                        physicalPages[swapPageIndex].virtualAddress = swapSpace[swapSpaceIndex].virtualAddress;
+                                        
+                                        //cleaning out one page -- not to confuse ourselves and the swap is done
+                                        swapSpace[swapSpaceIndex].isAllocated = false;
+                    		        swapSpace[swapSpaceIndex].virtualAddress = 0;
+                    		        swapSpace[swapSpaceIndex].dirty = false;
+                    		        swapSpace[swapSpaceIndex].accessed = 0;
+                    		        swapSpace[swapSpaceIndex].processID = 0;
+
 					break;
 				}
 			}
@@ -363,20 +374,29 @@ int main()
 				if(!physicalPages[swapPageIndex].dirty){ 
 					needSwapForReadAlgo = false;
                                         //tried implementing the swap here before breaking the loop
-                                        swapSpace[swapSpaceIndex].dirty =true;
-                                        swapSpace[swapSpaceIndex].processID = physicalPages[swapPageIndex].processID;
-                                        swapSpace[swapSpaceIndex].physicalAddress = physicalPages[swapPageIndex].physicalAddress;
-                                        swapSpace[swapSpaceIndex].virtualAddress = physicalPages[swapPageIndex].virtualAddress;
-                                        swapSpace[swapSpaceIndex].inSwapSpace = true;
+                                        swapSpace[pageFoundInSwap].dirty = true;
+                                        swapSpace[pageFoundInSwap].processID = physicalPages[swapPageIndex].processID;
+                                        swapSpace[pageFoundInSwap].physicalAddress = physicalPages[swapPageIndex].physicalAddress;
+                                        swapSpace[pageFoundInSwap].virtualAddress = physicalPages[swapPageIndex].virtualAddress;
+                                        swapSpace[pageFoundInSwap].inSwapSpace = true;
 
-                                        
                                         physicalPages[swapPageIndex].dirty = true;
-                                        physicalPages[swapPageIndex].processID = swapSpace[pageFoundInSwap].processID; 
+                                        physicalPages[swapPageIndex].processID = swapSpace[swapSpaceIndex].processID; 
                                         physicalPages[swapPageIndex].inSwapSpace = false;
                                         physicalPages[swapPageIndex].isAllocated = true;
-                                        physicalPages[swapPageIndex].physicalAddress = swapSpace[pageFoundInSwap].physicalAddress;
-                                        physicalPages[swapPageIndex].virtualAddress = swapSpace[pageFoundInSwap].virtualAddress;
-					break;
+                                        physicalPages[swapPageIndex].physicalAddress = swapSpace[swapSpaceIndex].physicalAddress;
+                                        physicalPages[swapPageIndex].virtualAddress = swapSpace[swapSpaceIndex].virtualAddress;
+					
+
+                                        //cleaning out one page -- not to confuse ourselves and the swap is done
+                                        swapSpace[swapSpaceIndex].isAllocated = false;
+                    		        swapSpace[swapSpaceIndex].virtualAddress = 0;
+                    		        swapSpace[swapSpaceIndex].dirty = false;
+                    		        swapSpace[swapSpaceIndex].accessed = 0;
+                    		        swapSpace[swapSpaceIndex].processID = 0;
+
+
+                                        break;
 				}
 			}
 
