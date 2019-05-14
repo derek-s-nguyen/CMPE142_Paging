@@ -23,7 +23,6 @@ int main()
     int accessTimeStamp = 1; //determine when page was accessed
     int PA;
     int swapSpaceIndex = 0;
-    int 
     ifstream in_stream;
     in_stream.open("memory.dat");
 
@@ -539,15 +538,16 @@ int main()
             }
 	    //dealing with swap space
 	    for(int i = 0; i < 40; i++){
-		if(swapSpace[0].processID == PID){
+		if(swapSpace[i].processID == PID){
 
-	            physicalPages[i].isAllocated = false;
-                    physicalPages[i].virtualAddress = 0;
-                    physicalPages[i].dirty = false;
-                    physicalPages[i].accessed = 0;
-                    physicalPages[i].processID = 0;
+	            swapSpace[i].isAllocated = false;
+                    swapSpace[i].virtualAddress = 0;
+                    swapSpace[i].dirty = false;
+                    swapSpace[i].accessed = 0;
+                    swapSpace[i].processID = 0;
 
 		}
+	    }
 
 
 	    
