@@ -23,7 +23,7 @@ int main()
     int accessTimeStamp = 1; //determine when page was accessed
     int PA;
     int swapSpaceIndex = 0;
-
+    int 
     ifstream in_stream;
     in_stream.open("memory.dat");
 
@@ -446,7 +446,7 @@ int main()
                 
                 else if(Processes[i].PID == PID && !Processes[i].pages[VA].isAllocated){
                        
-                                //ptrying to free a page that is not allocated
+                                //trying to free a page that is not allocated
 		     		for (int killIndex = 0; killIndex < 20; killIndex++){
                                         //search for process pages in memory to kill
                		 		if (physicalPages[killIndex].processID == PID){
@@ -538,6 +538,20 @@ int main()
 
                 }
             }
+	    //dealing with swap space
+	    for(int i = 0; i < 40; i++){
+		if(swapSpace[0].processID == PID){
+
+	            physicalPages[i].isAllocated = false;
+                    physicalPages[i].virtualAddress = 0;
+                    physicalPages[i].dirty = false;
+                    physicalPages[i].accessed = 0;
+                    physicalPages[i].processID = 0;
+
+		}
+
+
+	    
 
             //locate process with PID in process array
             //set isTerminated to true
