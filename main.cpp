@@ -167,10 +167,12 @@ int main()
 
                     if (Processes[i].pages == NULL)
                     {
-                        Processes[i].pages = new pageTable[100];
+                        Processes[i].pages = new pageTable[1000];
                         Processes[i].pages[VA].virtualAddress = VA;
                         Processes[i].pages[VA].physicalAddress = PA;
                         Processes[i].pages[VA].isAllocated = true;
+ 			Processes[i].pages[VA].FIFOcount = FIFOcounter;
+			FIFOcounter++;
 
                     }
 
@@ -181,12 +183,16 @@ int main()
                         Processes[i].pages[VA].virtualAddress = VA;
                         Processes[i].pages[VA].physicalAddress = PA;
                         Processes[i].pages[VA].isAllocated = true;
+			Processes[i].pages[VA].FIFOcount = FIFOcounter;
+			FIFOcounter++;
                     }
 
                     physicalPages[PA].processID = PID;
                     physicalPages[PA].virtualAddress = VA;
                     physicalPages[PA].physicalAddress = PA;
                     physicalPages[PA].isAllocated = true;
+		    physicalPages[PA].FIFOcount = FIFOcounter;
+		    FIFOcounter++;
                     break;
                 }
             }
@@ -304,24 +310,26 @@ int main()
 
 			 //adds the contents of page from physical memory into the free page in swap
 
-                        swapSpace[swapSpaceIndex].dirty = true;
+                        //swapSpace[swapSpaceIndex].dirty = true;
                         swapSpace[swapSpaceIndex].processID = physicalPages[swapPageIndex].processID;
                         swapSpace[swapSpaceIndex].physicalAddress = physicalPages[swapPageIndex].physicalAddress;
                         swapSpace[swapSpaceIndex].virtualAddress = physicalPages[swapPageIndex].virtualAddress;
                         swapSpace[swapSpaceIndex].inSwapSpace = true;
 			swapSpace[swapSpaceIndex].FIFOcount = 0;
-			/*for(int i = 0; i < 50; i++){
-				if(Processes[i].PID == physicalPages[swapPageIndex].processID){
-					for(int j = 0; j < 100; j++){
-						if(Processes[i].pages[j].virtualAddress == physicalPages[swapPageIndex].virtualAddress){
-							Processes[i].pages[j].inSwapSpace = true;
-						}
+			
+			for(int k = 0; k < 50; k++){
+				if(Processes[k].PID == physicalPages[swapPageIndex].processID){
+					
+						if(Processes[k].pages[physicalPages[swapPageIndex].virtualAddress].virtualAddress == physicalPages[swapPageIndex].virtualAddress){
+							Processes[k].pages[physicalPages[swapPageIndex].virtualAddress].virtualAddress = true;
+							break;
+						
 					}
 				}
 
 			}
-
-			*/
+			
+			
                          //copying desired process into physical page of memory
                         physicalPages[swapPageIndex].dirty = true;
                         physicalPages[swapPageIndex].processID = swapSpace[pageFoundInSwap].processID;
@@ -330,13 +338,16 @@ int main()
                         physicalPages[swapPageIndex].physicalAddress = swapSpace[pageFoundInSwap].physicalAddress;
                         physicalPages[swapPageIndex].virtualAddress = swapSpace[pageFoundInSwap].virtualAddress;
 			physicalPages[swapPageIndex].FIFOcount = FIFOcounter;
-			/*
+		
+			
+			
 			for(int i = 0; i < 50; i++){
 				if(Processes[i].PID == swapSpace[pageFoundInSwap].processID){
 					for(int j = 0; j < 100; j++){
 						if(Processes[i].pages[j].virtualAddress == swapSpace[pageFoundInSwap].virtualAddress){
 							Processes[i].pages[j].inSwapSpace = false;
 							Processes[i].pages[j].physicalAddress = swapPageIndex;
+							break;
 						}
 					}
 				}
@@ -344,7 +355,7 @@ int main()
 			}
 		        FIFOcounter++;
 
-                         */
+                         
                                         //cleaning out one page -- not to confuse ourselves and the swap is done
                         swapSpace[pageFoundInSwap].isAllocated = false;
                    	swapSpace[pageFoundInSwap].virtualAddress = 0;
@@ -462,16 +473,17 @@ int main()
                                         swapSpace[swapSpaceIndex].physicalAddress = physicalPages[swapPageIndex].physicalAddress;
                                         swapSpace[swapSpaceIndex].virtualAddress = physicalPages[swapPageIndex].virtualAddress;
                                         swapSpace[swapSpaceIndex].inSwapSpace = true;
-					/*for(int i = 0; i < 50; i++){
-						if(Processes[i].PID == physicalPages[swapPageIndex].processID){
-							for(int j = 0; j < 100; j++){
-								if(Processes[i].pages[j].virtualAddress == physicalPages[swapPageIndex].virtualAddress){
-									Processes[i].pages[j].inSwapSpace = true;
-								}
+					for(int k = 0; k < 50; k++){
+						if(Processes[k].PID == physicalPages[swapPageIndex].processID){
+					
+							if(Processes[k].pages[physicalPages[swapPageIndex].virtualAddress].virtualAddress == physicalPages[swapPageIndex].virtualAddress){
+								Processes[k].pages[physicalPages[swapPageIndex].virtualAddress].virtualAddress = true;
+								break;
+						
 							}
 						}
 
-					}*/
+					}
                                         //copying desired process into physical page of memory
                                         //physicalPages[swapPageIndex].dirty = true;
                                         physicalPages[swapPageIndex].processID = swapSpace[pageFoundInSwap].processID;
@@ -480,18 +492,19 @@ int main()
                                         physicalPages[swapPageIndex].physicalAddress = swapSpace[pageFoundInSwap].physicalAddress;
                                         physicalPages[swapPageIndex].virtualAddress = swapSpace[pageFoundInSwap].virtualAddress;
 					physicalPages[swapPageIndex].FIFOcount = FIFOcounter;
-					/*for(int i = 0; i < 50; i++){
+					for(int i = 0; i < 50; i++){
 						if(Processes[i].PID == swapSpace[pageFoundInSwap].processID){
 							for(int j = 0; j < 100; j++){
 								if(Processes[i].pages[j].virtualAddress == swapSpace[pageFoundInSwap].virtualAddress){
 									Processes[i].pages[j].inSwapSpace = false;
 									Processes[i].pages[j].physicalAddress = swapPageIndex;
+									break;
 								}
 							}
 						}
 
 					}
-		        		FIFOcounter++;*/
+		        		FIFOcounter++;
 
 
                                         //cleaning out one page -- not to confuse ourselves and the swap is done
