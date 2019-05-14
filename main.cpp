@@ -23,24 +23,31 @@ int main()
     int accessTimeStamp = 1; //determine when page was accessed
     int PA;
     int swapSpaceIndex = 0;
+    int swapPolicy = 0;
     ifstream in_stream;
     in_stream.open("memory.dat");
 
+    while(swapPolicy != 1 || swapPolicy != 2 || swapPolicy != 3){
+	cout<<"Select One of The Policies"<<endl;
+	cout<<"Type '1' for Random"<<endl; 
+	cout<<"Type '2' for FIFO"<<endl;
+	cout<<"Type '3' for LRU"<<endl;
+	cin >> swapPolicy;
+	if(swapPolicy == 1 || swapPolicy == 2 || swapPolicy == 3) break;
+
+    }
     while (in_stream >> PID)
     {
 
-        cout << PID<<"\t";
+        
         in_stream >> status;
-        cout << status<<"\t";
+    
         if (status == 'A' || status == 'W' || status == 'F' || status == 'R')
         {
             in_stream >> VA;
-            cout << VA;
+          
         }
-        cout << "\t";
-        processActionCounter++;
-        cout << processActionCounter;
-        cout << "\n";
+       
 
         if (status == 'C')
         { //create the process in processes array
@@ -92,8 +99,25 @@ int main()
 	    }
 	    
             if(needSwapAlgo){
-	     cout<<"need swap algo"<<endl;
-	     //will find PA using the swap algo
+
+	    	cout<<"need swap algo"<<endl;
+	     	//will find PA using the swap algo
+	
+		//random
+	     	if(swapPolicy == 1){
+
+		}
+		//FIFO
+		if(swapPolicy == 2){
+
+		}
+		//LRU
+		if(swapPolicy == 3){
+
+		}
+
+
+	    
             }
             for (int i = 0; i < 50; i++)
             {
@@ -281,8 +305,28 @@ int main()
 
  			if(writeSwapWithAlgo){
 				cout<<"need swap policy"<<endl;
+				
+	     			//will find PA using the swap algo
+	
+				//random
+	     			if(swapPolicy == 1){
+
+				}	
+				//FIFO
+				if(swapPolicy == 2){
+
+				}
+				//LRU
+				if(swapPolicy == 3){
+
+				}	
+
+
 		
 		   	}
+
+
+			//Need swap here
 			/*	//copying physical page into swap space 
 				  swapSpace[swapSpaceIndex].processID =
                                 physicalPages[swapPageIndex].processID;
@@ -399,7 +443,23 @@ int main()
 			}
 
  			if(needSwapForReadAlgo){
+				
 				cout<<"need swap policy"<<endl;
+				
+	     			//will find PA using the swap algo
+	
+				//random
+	     			if(swapPolicy == 1){
+
+				}	
+				//FIFO
+				if(swapPolicy == 2){
+
+				}
+				//LRU
+				if(swapPolicy == 3){
+
+				}
 		
 		   	}
 			else{
