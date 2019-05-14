@@ -32,7 +32,7 @@ int main()
 
     while(swapPolicy != 1 || swapPolicy != 2 || swapPolicy != 3){
 	cout<<"Select One of The Policies"<<endl;
-	cout<<"Type '1' for Random"<<endl; 
+	cout<<"Type '1' for Random"<<endl;
 	cout<<"Type '2' for FIFO"<<endl;
 	cout<<"Type '3' for LRU"<<endl;
 	cin >> swapPolicy;
@@ -42,15 +42,15 @@ int main()
     while (in_stream >> PID)
     {
 
-        
+
         in_stream >> status;
-    
+
         if (status == 'A' || status == 'W' || status == 'F' || status == 'R')
         {
             in_stream >> VA;
-          
+
         }
-       
+
 
         if (status == 'C')
         { //create the process in processes array
@@ -59,7 +59,7 @@ int main()
 	    for(newProcessIndex = 0; newProcessIndex < 50; newProcessIndex++){
 
 		if(Processes[newProcessIndex].PID == PID && Processes[newProcessIndex].isTerminated){terminatedProcessFound = true; break;}
-		
+
 
 	    }
 
@@ -98,14 +98,14 @@ int main()
 		if(!physicalPages[PA].dirty) break;//if page clean, pass PA to allocation
 		if(PA == 19 && physicalPages[PA].dirty) needSwapAlgo = true;//all pages are dirty
 		}
-	    
+
 	    }
-	    
+
             if(needSwapAlgo){
 
 	    	cout<<"need swap algo"<<endl;
 	     	//will find PA using the swap algo
-	
+
 		//random
 	     	if(swapPolicy == 1){
 			PA = rand() % 20 + 0;
@@ -116,11 +116,17 @@ int main()
 		}
 		//LRU
 		if(swapPolicy == 3){
-
+			int pageWithLeastAccessed = 0;
+			for(int i = 0; i < 20; i++){
+				if(physicalPages[i].accessed < physicalPages[pageWithLeastAccessed].accessed){
+					pageWithLeastAccessed = i;
+				}
+			}
+			swapPageIndex = pageWithLeastAccessed;
 		}
 
 
-	    
+
             }
             for (int i = 0; i < 50; i++)
             {
@@ -171,7 +177,7 @@ int main()
 
                     else
                     {
-                    
+
                         Processes[i].pages[VA].virtualAddress = VA;
                         Processes[i].pages[VA].physicalAddress = PA;
                         Processes[i].pages[VA].isAllocated = true;
@@ -185,7 +191,7 @@ int main()
                 }
             }
 
-          
+
             //1(a).If Process has no pages
 
             //use pageTable ptr in process object to make dynamic pagetable array
@@ -208,11 +214,11 @@ int main()
 	    int pageFoundInSwap = 0;
 
             //locate process with PID in the processes array and write into that page
-	    
+
             for (int i = 0; i < 50; i++)
             {
-                 if(Processes[i].PID == PID){//find process 
-		   //check if process tries to write to unallocated page   
+                 if(Processes[i].PID == PID){//find process
+		   //check if process tries to write to unallocated page
 		   if(!Processes[i].pages[VA].isAllocated){
 
                            //page trying to write to is not allocated
@@ -257,41 +263,47 @@ int main()
                         {
                             swapSpaceIndex++;
                         }//while loop
-			
+
                         //look for clean pages in physical memory
 			for(swapPageIndex = 0; swapPageIndex < 20; swapPageIndex++){
-				if(!physicalPages[swapPageIndex].dirty){ 
+				if(!physicalPages[swapPageIndex].dirty){
 					writeSwapWithAlgo = false;
-                                        //tried implementing the swap here before breaking the loop 
+                                        //tried implementing the swap here before breaking the loop
 					break;
-				}//if 
+				}//if
 			}//for
-			
+
 
 			if(writeSwapWithAlgo){
 				cout<<"need swap policy"<<endl;
-				
+
 	     			//will find PA using the swap algo
-	
+
 				//random
 	     			if(swapPolicy == 1){
 					swapPageIndex = rand() % 20 + 0;
-				}	
+				}
 				//FIFO
 				if(swapPolicy == 2){
 
 				}
 				//LRU
 				if(swapPolicy == 3){
+					int pageWithLeastAccessed = 0;
+					for(int i = 0; i < 20; i++){
+						if(physicalPages[i].accessed < physicalPages[pageWithLeastAccessed].accessed){
+							pageWithLeastAccessed = i;
+						}
+					}
+					swapPageIndex = pageWithLeastAccessed;
+				}
 
-				}	
 
 
-		
 		   	}//if
 
 			 //adds the contents of page from physical memory into the free page in swap
-			
+
                         swapSpace[swapSpaceIndex].dirty = true;
                         swapSpace[swapSpaceIndex].processID = physicalPages[swapPageIndex].processID;
                         swapSpace[swapSpaceIndex].physicalAddress = physicalPages[swapPageIndex].physicalAddress;
@@ -306,13 +318,13 @@ int main()
 						}
 					}
 				}
-				
+
 			}
-		
+
 			*/
                          //copying desired process into physical page of memory
                         physicalPages[swapPageIndex].dirty = true;
-                        physicalPages[swapPageIndex].processID = swapSpace[pageFoundInSwap].processID; 
+                        physicalPages[swapPageIndex].processID = swapSpace[pageFoundInSwap].processID;
                         physicalPages[swapPageIndex].inSwapSpace = false;
                         physicalPages[swapPageIndex].isAllocated = true;
                         physicalPages[swapPageIndex].physicalAddress = swapSpace[pageFoundInSwap].physicalAddress;
@@ -328,20 +340,20 @@ int main()
 						}
 					}
 				}
-				
+
 			}
 		        FIFOcounter++;
-                                        
-                         */               
+
+                         */
                                         //cleaning out one page -- not to confuse ourselves and the swap is done
                         swapSpace[pageFoundInSwap].isAllocated = false;
                    	swapSpace[pageFoundInSwap].virtualAddress = 0;
                    	swapSpace[pageFoundInSwap].dirty = false;
                   	swapSpace[pageFoundInSwap].accessed = 0;
                    	swapSpace[pageFoundInSwap].processID = 0;
-			
+
 		   }//else if page wants to be writen to but is located in swap
-		  
+
 
 		   else{
                     	Processes[i].pages[VA].dirty = true; //make dirty teehee ;)
@@ -352,9 +364,9 @@ int main()
                     	accessTimeStamp++;
                    	break;
 		   }//else
-                }//for 
+                }//for
             }//if - write to page
-            
+
 
         if (status == 'R')
         { //Read from page
@@ -367,7 +379,7 @@ int main()
 
             for (int i = 0; i < 50; i++)
             {
-                   if(Processes[i].PID == PID){   
+                   if(Processes[i].PID == PID){
 		   	if(!Processes[i].pages[VA].isAllocated){
                                 //trying read a page that is not allocated
 		     		for(int killIndex = 0; killIndex < 20; killIndex++){
@@ -396,7 +408,7 @@ int main()
                     		Processes[i].pages = NULL; //page table ptr points to NULL
                     		break;
 			}//if - trying to read a ra
-		  
+
                         //if page wants to be read to but is located in swap
 		   else if(Processes[i].pages[VA].isAllocated && Processes[i].pages[VA].inSwapSpace){
 			 //find process in swap space
@@ -408,35 +420,41 @@ int main()
                         {
                             swapSpaceIndex++;
                         }//while
-			
+
                         //look for clean pages in physical memory
 			for(int swapPageIndex = 0; swapPageIndex < 20; swapPageIndex++){
-				if(!physicalPages[swapPageIndex].dirty){ 
+				if(!physicalPages[swapPageIndex].dirty){
 					needSwapForReadAlgo = false;
-                                        
+
                                         break;
 				}//if
 			}//for
 
  			if(needSwapForReadAlgo){
-				
+
 				cout<<"need swap policy"<<endl;
-				
+
 	     			//will find PA using the swap algo
-	
+
 				//random
 	     			if(swapPolicy == 1){
 					swapPageIndex = rand() % 20 + 0;
-				}	
+				}
 				//FIFO
 				if(swapPolicy == 2){
 
 				}
 				//LRU
 				if(swapPolicy == 3){
-
+					int pageWithLeastAccessed = 0;
+					for(int i = 0; i < 20; i++){
+						if(physicalPages[i].accessed < physicalPages[pageWithLeastAccessed].accessed){
+							pageWithLeastAccessed = i;
+						}
+					}
+					swapPageIndex = pageWithLeastAccessed;
 				}
-		
+
 		   	}//if
 					//adds the contents of page from physical memory into the free page in swap
 			 		//swapSpace[swapSpaceIndex].dirty =true;
@@ -452,11 +470,11 @@ int main()
 								}
 							}
 						}
-				
+
 					}*/
                                         //copying desired process into physical page of memory
                                         //physicalPages[swapPageIndex].dirty = true;
-                                        physicalPages[swapPageIndex].processID = swapSpace[pageFoundInSwap].processID; 
+                                        physicalPages[swapPageIndex].processID = swapSpace[pageFoundInSwap].processID;
                                         physicalPages[swapPageIndex].inSwapSpace = false;
                                         physicalPages[swapPageIndex].isAllocated = true;
                                         physicalPages[swapPageIndex].physicalAddress = swapSpace[pageFoundInSwap].physicalAddress;
@@ -471,11 +489,11 @@ int main()
 								}
 							}
 						}
-					
+
 					}
 		        		FIFOcounter++;*/
-                                        		
-                                        
+
+
                                         //cleaning out one page -- not to confuse ourselves and the swap is done
                                         swapSpace[pageFoundInSwap].isAllocated = false;
                     		        swapSpace[pageFoundInSwap].virtualAddress = 0;
@@ -493,8 +511,8 @@ int main()
 		   	}//else
 
 		   }
-		   
-                
+
+
             }
             }
 
@@ -523,9 +541,9 @@ int main()
 
                     break;
                 }
-                
+
                 else if(Processes[i].PID == PID && !Processes[i].pages[VA].isAllocated){
-                       
+
                                 //trying to free a page that is not allocated
 		     		for (int killIndex = 0; killIndex < 20; killIndex++){
                                         //search for process pages in memory to kill
@@ -552,7 +570,7 @@ int main()
                     		Processes[i].isTerminated = true; //deemed terminated
                     		Processes[i].pages = NULL; //page table ptr points to NULL
                     		break;
-			
+
                 }
         }
          //need to consider if user wants to free process in swap space
@@ -619,7 +637,7 @@ int main()
 	    }
 
 
-	    
+
 
             //locate process with PID in process array
             //set isTerminated to true
@@ -633,7 +651,7 @@ int main()
 
     }
     //Print out physical memory
-   
+
     cout<<"PHYSICAL MEMORY"<<endl;
     cout << "PID\t" << "VA\t" << "PA\t" << "Dirty?\t" << "Access\t" << endl;
     cout << "___________________________________________________________"
