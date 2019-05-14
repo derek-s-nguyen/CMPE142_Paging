@@ -237,7 +237,7 @@ int main()
 		   }
 
 		   //if page wants to be writen to but is located in swap
-		   if(Processes[i].pages[VA].isAllocated && Processes[i].pages[VA].inSwapSpace){
+		   else if(Processes[i].pages[VA].isAllocated && Processes[i].pages[VA].inSwapSpace){
 			 //find process in swap space
 			for(pageFoundInSwap = 0; pageFoundInSwap < 40; pageFoundInSwap++){
 				if(swapSpace[pageFoundInSwap].processID == PID && swapSpace[pageFoundInSwap].virtualAddress == VA)break;
@@ -255,26 +255,26 @@ int main()
                                         //tried implementing the swap here before breaking the loop
                                         
                                         //adds the contents of page from physical memory into the free page in swap
-                                        swapSpace[pageFoundInSwap].dirty =true;
-                                        swapSpace[pageFoundInSwap].processID = physicalPages[swapPageIndex].processID;
-                                        swapSpace[pageFoundInSwap].physicalAddress = physicalPages[swapPageIndex].physicalAddress;
-                                        swapSpace[pageFoundInSwap].virtualAddress = physicalPages[swapPageIndex].virtualAddress;
-                                        swapSpace[pageFoundInSwap].inSwapSpace = true;
+                                        swapSpace[swapPageIndex].dirty =true;
+                                        swapSpace[swapPageIndex].processID = physicalPages[swapPageIndex].processID;
+                                        swapSpace[swapPageIndex].physicalAddress = physicalPages[swapPageIndex].physicalAddress;
+                                        swapSpace[swapPageIndex].virtualAddress = physicalPages[swapPageIndex].virtualAddress;
+                                        swapSpace[swapPageIndex].inSwapSpace = true;
 
                                         //copying desired process into physical page of memory
                                         physicalPages[swapPageIndex].dirty = true;
-                                        physicalPages[swapPageIndex].processID = swapSpace[swapSpaceIndex].processID; 
+                                        physicalPages[swapPageIndex].processID = swapSpace[pageFoundInSwap].processID; 
                                         physicalPages[swapPageIndex].inSwapSpace = false;
                                         physicalPages[swapPageIndex].isAllocated = true;
-                                        physicalPages[swapPageIndex].physicalAddress = swapSpace[swapSpaceIndex].physicalAddress;
-                                        physicalPages[swapPageIndex].virtualAddress = swapSpace[swapSpaceIndex].virtualAddress;
+                                        physicalPages[swapPageIndex].physicalAddress = swapSpace[pageFoundInSwap].physicalAddress;
+                                        physicalPages[swapPageIndex].virtualAddress = swapSpace[pageFoundInSwap].virtualAddress;
                                         
                                         //cleaning out one page -- not to confuse ourselves and the swap is done
-                                        swapSpace[swapSpaceIndex].isAllocated = false;
-                    		        swapSpace[swapSpaceIndex].virtualAddress = 0;
-                    		        swapSpace[swapSpaceIndex].dirty = false;
-                    		        swapSpace[swapSpaceIndex].accessed = 0;
-                    		        swapSpace[swapSpaceIndex].processID = 0;
+                                        swapSpace[pageFoundInSwap].isAllocated = false;
+                    		        swapSpace[pageFoundInSwap].virtualAddress = 0;
+                    		        swapSpace[pageFoundInSwap].dirty = false;
+                    		        swapSpace[pageFoundInSwap].accessed = 0;
+                    		        swapSpace[pageFoundInSwap].processID = 0;
 
 					break;
 				}
@@ -358,7 +358,7 @@ int main()
 			}
 
                         //if page wants to be read to but is located in swap
-		   if(Processes[i].pages[VA].isAllocated && Processes[i].pages[VA].inSwapSpace){
+		   else if(Processes[i].pages[VA].isAllocated && Processes[i].pages[VA].inSwapSpace){
 			 //find process in swap space
 			for(pageFoundInSwap = 0; pageFoundInSwap < 40; pageFoundInSwap++){
 				if(swapSpace[pageFoundInSwap].processID == PID && swapSpace[pageFoundInSwap].virtualAddress == VA)break;
@@ -373,27 +373,26 @@ int main()
 			for(int swapPageIndex = 0; swapPageIndex < 20; swapPageIndex++){
 				if(!physicalPages[swapPageIndex].dirty){ 
 					needSwapForReadAlgo = false;
-                                        //tried implementing the swap here before breaking the loop
-                                        swapSpace[pageFoundInSwap].dirty = true;
-                                        swapSpace[pageFoundInSwap].processID = physicalPages[swapPageIndex].processID;
-                                        swapSpace[pageFoundInSwap].physicalAddress = physicalPages[swapPageIndex].physicalAddress;
-                                        swapSpace[pageFoundInSwap].virtualAddress = physicalPages[swapPageIndex].virtualAddress;
-                                        swapSpace[pageFoundInSwap].inSwapSpace = true;
+                                          swapSpace[swapPageIndex].dirty =true;
+                                        swapSpace[swapPageIndex].processID = physicalPages[swapPageIndex].processID;
+                                        swapSpace[swapPageIndex].physicalAddress = physicalPages[swapPageIndex].physicalAddress;
+                                        swapSpace[swapPageIndex].virtualAddress = physicalPages[swapPageIndex].virtualAddress;
+                                        swapSpace[swapPageIndex].inSwapSpace = true;
 
+                                        //copying desired process into physical page of memory
                                         physicalPages[swapPageIndex].dirty = true;
-                                        physicalPages[swapPageIndex].processID = swapSpace[swapSpaceIndex].processID; 
+                                        physicalPages[swapPageIndex].processID = swapSpace[pageFoundInSwap].processID; 
                                         physicalPages[swapPageIndex].inSwapSpace = false;
                                         physicalPages[swapPageIndex].isAllocated = true;
-                                        physicalPages[swapPageIndex].physicalAddress = swapSpace[swapSpaceIndex].physicalAddress;
-                                        physicalPages[swapPageIndex].virtualAddress = swapSpace[swapSpaceIndex].virtualAddress;
-					
-
+                                        physicalPages[swapPageIndex].physicalAddress = swapSpace[pageFoundInSwap].physicalAddress;
+                                        physicalPages[swapPageIndex].virtualAddress = swapSpace[pageFoundInSwap].virtualAddress;
+                                        
                                         //cleaning out one page -- not to confuse ourselves and the swap is done
-                                        swapSpace[swapSpaceIndex].isAllocated = false;
-                    		        swapSpace[swapSpaceIndex].virtualAddress = 0;
-                    		        swapSpace[swapSpaceIndex].dirty = false;
-                    		        swapSpace[swapSpaceIndex].accessed = 0;
-                    		        swapSpace[swapSpaceIndex].processID = 0;
+                                        swapSpace[pageFoundInSwap].isAllocated = false;
+                    		        swapSpace[pageFoundInSwap].virtualAddress = 0;
+                    		        swapSpace[pageFoundInSwap].dirty = false;
+                    		        swapSpace[pageFoundInSwap].accessed = 0;
+                    		        swapSpace[pageFoundInSwap].processID = 0;
 
 
                                         break;
@@ -565,6 +564,7 @@ int main()
 
     }
     //Print out physical memory
+    cout << endl;
     cout<<"PHYSICAL MEMORY"<<endl;
     cout << "PID\t" << "VA\t" << "PA\t" << "Dirty?\t" << "Access\t" << endl;
     cout << "___________________________________________________________"
