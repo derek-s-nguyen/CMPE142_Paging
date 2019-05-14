@@ -25,6 +25,7 @@ pageTable::pageTable(){
     virtualAddress = 0;
     isFreed = false;
     inSwapSpace = false;
+    FIFOcount = 0;
 
 }
 

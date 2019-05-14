@@ -22,7 +22,7 @@ public:
     int virtualAddress;
     bool dirty;
     int accessed;
-    int FIFOCount;
+    int FIFOcount;
     bool isFreed;
     bool isAllocated; //bool to check if the page is allocated or not
     bool inSwapSpace;
