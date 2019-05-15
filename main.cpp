@@ -41,13 +41,15 @@ int main()
     }
     while (in_stream >> PID)
     {
-
+	//cout<<PID<<"\t";
 
         in_stream >> status;
+	//cout<<status<<"\t";
 
         if (status == 'A' || status == 'W' || status == 'F' || status == 'R')
         {
             in_stream >> VA;
+	    //cout<<"VA"<<endl;
 
         }
 
@@ -116,6 +118,7 @@ int main()
 			for(int i = 0; i < 20; i++){
 				if(physicalPages[i].FIFOcount < physicalPages[pageWithLeastAccessed].FIFOcount){
 					pageWithLeastAccessed = i;
+					break;
 				}
 			}
 			swapPageIndex = pageWithLeastAccessed;
@@ -126,11 +129,11 @@ int main()
 			for(int i = 0; i < 20; i++){
 				if(physicalPages[i].accessed < physicalPages[pageWithLeastAccessed].accessed){
 					pageWithLeastAccessed = i;
+					break;
 				}
 			}
 			swapPageIndex = pageWithLeastAccessed;
 		}
-
 
 
             }
@@ -177,8 +180,6 @@ int main()
                         Processes[i].pages[VA].virtualAddress = VA;
                         Processes[i].pages[VA].physicalAddress = PA;
                         Processes[i].pages[VA].isAllocated = true;
- 			Processes[i].pages[VA].FIFOcount = FIFOcounter;
-			FIFOcounter++;
 
                     }
 
@@ -301,6 +302,7 @@ int main()
 					for(int i = 0; i < 20; i++){
 						if(physicalPages[i].accessed < physicalPages[pageWithLeastAccessed].accessed){
 							pageWithLeastAccessed = i;
+							break;
 						}
 					}
 					swapPageIndex = pageWithLeastAccessed;
@@ -329,17 +331,17 @@ int main()
                         swapSpace[swapSpaceIndex].inSwapSpace = true;
 			    swapSpace[swapSpaceIndex].FIFOcount = 0;
 
-			// for(int k = 0; k < 50; k++){
-			// 	if(Processes[k].PID == physicalPages[swapPageIndex].processID){
+			 for(int k = 0; k < 50; k++){
+			 	if(Processes[k].PID == physicalPages[swapPageIndex].processID){
 
-			// 			if(Processes[k].pages[physicalPages[swapPageIndex].virtualAddress].virtualAddress == physicalPages[swapPageIndex].virtualAddress){
-			// 				Processes[k].pages[physicalPages[swapPageIndex].virtualAddress].virtualAddress = true;
-			// 				break;
+			 			if(Processes[k].pages[physicalPages[swapPageIndex].virtualAddress].virtualAddress == physicalPages[swapPageIndex].virtualAddress){
+			 				Processes[k].pages[physicalPages[swapPageIndex].virtualAddress].inSwapSpace = true;
+			 				break;
 
-			// 		}
-			// 	}
+			 		}
+			 	}
 
-			// }
+			}
 
 
                          //copying desired process into physical page of memory
@@ -469,6 +471,7 @@ int main()
 					for(int i = 0; i < 20; i++){
 						if(physicalPages[i].accessed < physicalPages[pageWithLeastAccessed].accessed){
 							pageWithLeastAccessed = i;
+							break;
 						}
 					}
 					swapPageIndex = pageWithLeastAccessed;
@@ -495,7 +498,7 @@ int main()
 						if(Processes[k].PID == physicalPages[swapPageIndex].processID){
 
 							if(Processes[k].pages[physicalPages[swapPageIndex].virtualAddress].virtualAddress == physicalPages[swapPageIndex].virtualAddress){
-								Processes[k].pages[physicalPages[swapPageIndex].virtualAddress].virtualAddress = true;
+								Processes[k].pages[physicalPages[swapPageIndex].virtualAddress].inSwapSpace = true;
 								break;
 
 							}
@@ -629,12 +632,11 @@ int main()
             //Terminate process
             for (int i = 0; i < 50; i++)
             {
-                if (Processes[i].PID == PID
-                        && Processes[i].pages[VA].isAllocated == true)
+                if (Processes[i].PID == PID)
                 {
                     //finds Process
-                    Processes[i].isCreated = false; //Not allocated anymore
                     Processes[i].isTerminated = true; //deemed terminated
+	            Processes[i].isCreated = false; //Not allocated anymore
                     Processes[i].pages = NULL; //page table ptr points to NULL
                     break;
                 }
@@ -711,6 +713,30 @@ int main()
         if (swapSpace[i].dirty == false)
             cout << "No" << "\t" << physicalPages[i].accessed << endl;
     }
+   //Print out processes
+   for(int i = 0; i < 50; i++){
+	if(Processes[i].isCreated){
+   	cout<<"Process:"<<Processes[i].PID<<endl;
+		if(Processes[i].pages != NULL){
+			for(int j = 0; j < 100; j++){
+				if(Processes[i].pages[j].isAllocated){
+					cout <<"VA:"<<Processes[i].pages[j].virtualAddress << "\t";
+					if(Processes[i].pages[j].inSwapSpace) cout<<"IN SWAP"<<endl;
+					else{cout <<"PA:"<<Processes[i].pages[j].physicalAddress << endl;}
+				}
+			}
+
+		}
+		
+   	}
+   }
+   //Print out terminated processes
+   for(int i = 0; i < 50; i++){
+	if(Processes[i].isTerminated){
+		cout<<"Terminated Process:"<<Processes[i].PID<<endl;
+	}
+   }
+
 
 }
 
