@@ -327,19 +327,19 @@ int main()
                         swapSpace[swapSpaceIndex].physicalAddress = physicalPages[swapPageIndex].physicalAddress;
                         swapSpace[swapSpaceIndex].virtualAddress = physicalPages[swapPageIndex].virtualAddress;
                         swapSpace[swapSpaceIndex].inSwapSpace = true;
-			swapSpace[swapSpaceIndex].FIFOcount = 0;
+			    swapSpace[swapSpaceIndex].FIFOcount = 0;
 
-			for(int k = 0; k < 50; k++){
-				if(Processes[k].PID == physicalPages[swapPageIndex].processID){
+			// for(int k = 0; k < 50; k++){
+			// 	if(Processes[k].PID == physicalPages[swapPageIndex].processID){
 
-						if(Processes[k].pages[physicalPages[swapPageIndex].virtualAddress].virtualAddress == physicalPages[swapPageIndex].virtualAddress){
-							Processes[k].pages[physicalPages[swapPageIndex].virtualAddress].virtualAddress = true;
-							break;
+			// 			if(Processes[k].pages[physicalPages[swapPageIndex].virtualAddress].virtualAddress == physicalPages[swapPageIndex].virtualAddress){
+			// 				Processes[k].pages[physicalPages[swapPageIndex].virtualAddress].virtualAddress = true;
+			// 				break;
 
-					}
-				}
+			// 		}
+			// 	}
 
-			}
+			// }
 
 
                          //copying desired process into physical page of memory
